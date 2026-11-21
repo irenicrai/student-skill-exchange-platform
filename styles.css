@@ -2147,10 +2147,23 @@ body.dark-theme .trade-label.learn {
   color: var(--text-muted);
 }
 
-/* Responsive Breakpoints */
+/* ===================================================================
+   RESPONSIVE DESIGN & MOBILE MEDIA QUERIES
+   Breakpoints:
+   - 1024px: Tablets Landscape & Small Laptops
+   - 768px:  Tablets Portrait & Mobile Devices
+   - 480px:  Compact Smartphones (iPhone SE, Android)
+   =================================================================== */
+
+/* Tablet & Small Laptop (<= 1024px) */
 @media (max-width: 1024px) {
+  .container {
+    padding: 0 1.25rem;
+  }
+
   .hero-grid {
     grid-template-columns: 1fr;
+    gap: 2.5rem;
   }
 
   .academic-theory-box {
@@ -2166,48 +2179,390 @@ body.dark-theme .trade-label.learn {
     height: auto;
   }
 
+  .skills-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
   .footer-grid {
     grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
   }
 }
 
+/* Tablets Portrait & Mobile Devices (<= 768px) */
 @media (max-width: 768px) {
+  /* Navigation Bar Mobile Layout */
+  .navbar {
+    padding: 0.65rem 0;
+  }
+
+  .nav-wrapper {
+    position: relative;
+  }
+
   .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    padding: 1.25rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    z-index: 1000;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    background: var(--bg-subtle);
+  }
+
+  .nav-link.active::after {
     display: none;
   }
 
   .mobile-menu-btn {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-light);
+    color: var(--text-main);
+    font-size: 1.25rem;
+    cursor: pointer;
+  }
+
+  .brand-logo span {
+    font-size: 1.05rem;
+  }
+
+  .brand-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+  }
+
+  /* Compact Navbar Actions */
+  .nav-actions {
+    gap: 0.5rem;
+  }
+
+  #toggleSpeakerNotesBtn {
+    display: none; /* Hide presentation cues on mobile to save precious screen header space */
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding: 2.5rem 0 2rem;
+  }
+
+  .hero-badge-wrap {
+    flex-wrap: wrap;
+    gap: 0.4rem;
   }
 
   .hero-title {
-    font-size: 2.35rem;
+    font-size: 2.15rem;
+    line-height: 1.25;
   }
 
+  .hero-subtitle {
+    font-size: 0.98rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Quick Match Hero Widget */
+  .quick-match-inputs {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .quick-match-inputs .swap-icon-btn,
+  .quick-match-inputs i.fa-arrows-left-right {
+    display: none;
+  }
+
+  .quick-match-inputs .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Cycle Solver & Matching Layouts */
   .solver-controls-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .solver-controls-grid .btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .direct-match-layout {
     flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
   }
 
   .credit-token-layout {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
+  .token-balance-showcase {
+    padding: 1.5rem;
+  }
+
+  .cycle-nodes-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  /* Skill Marketplace */
+  .filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .filters-bar .search-box,
+  .filters-bar select,
+  .filters-bar .btn {
+    width: 100%;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .skill-card {
+    padding: 1.35rem;
+  }
+
+  .skill-card-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .skill-card-footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Dashboard Section */
   .dash-header-card {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
+    align-items: stretch;
+    gap: 1.25rem;
+    padding: 1.35rem;
   }
 
   .dash-wallet-summary {
     align-items: flex-start;
     text-align: left;
+    width: 100%;
   }
 
+  .dash-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  /* Responsive Horizontal Scroll Tables */
+  .algorithm-comparison-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-md);
+  }
+
+  .algo-table {
+    min-width: 580px;
+    font-size: 0.82rem;
+  }
+
+  /* MySQL Schema Explorer */
+  .category-pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .category-pill {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.78rem;
+  }
+
+  .sql-terminal {
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .sql-terminal pre {
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* Modal Dialogs */
+  .modal-overlay {
+    padding: 1rem;
+  }
+
+  .modal-window {
+    max-height: 92vh;
+    border-radius: var(--radius-lg);
+  }
+
+  .modal-header {
+    padding: 1.25rem 1.25rem;
+  }
+
+  .modal-body {
+    padding: 1.25rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .modal-footer {
+    padding: 1rem 1.25rem;
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Footer */
   .footer-grid {
     grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.85rem;
+  }
+}
+
+/* Small Screen Smartphones (<= 480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  /* Brand and Header Adjustments */
+  .brand-logo span {
+    font-size: 0.92rem;
+  }
+
+  .brand-tag {
+    display: none;
+  }
+
+  #openCreateProfileBtn {
+    display: none; /* Accessible directly via mobile drawer menu */
+  }
+
+  #openPostSkillBtn {
+    padding: 0.38rem 0.65rem;
+    font-size: 0.76rem;
+  }
+
+  .credit-pill {
+    padding: 0.32rem 0.58rem;
+    font-size: 0.75rem;
+  }
+
+  /* Hero Title & Text Scaling */
+  .hero-title {
+    font-size: 1.75rem;
+    line-height: 1.22;
+  }
+
+  .hero-subtitle {
+    font-size: 0.90rem;
+    line-height: 1.5;
+  }
+
+  .hero-metrics {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  /* Single Column Dashboard Stats */
+  .dash-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  /* Mobile Touch Targets & iOS Auto-Zoom Prevention */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important; /* Prevents unwanted auto-zooming on iOS Safari */
+  }
+
+  .btn {
+    min-height: 44px; /* Accessible minimum touch target size */
+  }
+
+  /* Section Title Spacing */
+  .section-header {
+    margin-bottom: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.65rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.88rem;
+  }
+
+  /* Toast Notification Positioning */
+  .toast-container {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .toast {
+    width: 100%;
   }
 }
