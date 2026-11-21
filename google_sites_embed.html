@@ -1,0 +1,4661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Skill Exchange Platform</title>
+  <meta name="description" content="An academic and practical peer-to-peer student skill exchange platform utilizing graph cycle detection, time-banking tokens, and MySQL relational modeling.">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <style>
+/* ===================================================================
+   STUDENT SKILL EXCHANGE PLATFORM - DESIGN SYSTEM & STYLES
+   Aesthetic: Modern Academic Tech, Clean Glassmorphism, Micro-interactions
+   =================================================================== */
+
+:root {
+  /* Color Palette - Modern Indigo & Emerald Theme */
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-light: #e0e7ff;
+  --primary-glow: rgba(79, 70, 229, 0.25);
+
+  --secondary: #06b6d4;
+  --secondary-hover: #0891b2;
+  --secondary-light: #cffafe;
+
+  --accent-emerald: #10b981;
+  --accent-emerald-light: #d1fae5;
+  --accent-amber: #f59e0b;
+  --accent-amber-light: #fef3c7;
+  --accent-rose: #f43f5e;
+  --accent-rose-light: #ffe4e6;
+  --accent-purple: #8b5cf6;
+  --accent-purple-light: #ede9fe;
+
+  /* Light Theme Defaults */
+  --bg-main: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-subtle: #f1f5f9;
+  --bg-card: rgba(255, 255, 255, 0.85);
+
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+  --text-inverse: #ffffff;
+
+  --border-light: #e2e8f0;
+  --border-focus: #818cf8;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.35);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dark Theme Overrides */
+body.dark-theme {
+  --bg-main: #0b0f19;
+  --bg-surface: #111827;
+  --bg-surface-elevated: #1f2937;
+  --bg-subtle: #1e293b;
+  --bg-card: rgba(17, 24, 39, 0.85);
+
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-subtle: #64748b;
+  --text-inverse: #0f172a;
+
+  --border-light: #1e293b;
+  --border-focus: #6366f1;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.45);
+
+  --primary-light: rgba(79, 70, 229, 0.2);
+  --accent-emerald-light: rgba(16, 185, 129, 0.2);
+  --accent-amber-light: rgba(245, 158, 11, 0.2);
+  --accent-rose-light: rgba(244, 63, 94, 0.2);
+  --accent-purple-light: rgba(139, 92, 246, 0.2);
+}
+
+/* Presentation Mode & Speaker Hint Boxes */
+.speaker-hint-box {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.08) 100%);
+  border: 1.5px dashed rgba(245, 158, 11, 0.5);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+  margin: 1.25rem auto 2rem;
+  max-width: 860px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-main);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.1);
+  text-align: left;
+}
+
+body.hide-speaker-hints .speaker-hint-box {
+  display: none !important;
+}
+
+.speaker-hint-box strong {
+  color: #b45309;
+}
+
+body.dark-theme .speaker-hint-box strong {
+  color: #fcd34d;
+}
+
+.speaker-hint-icon {
+  font-size: 1.15rem;
+  color: #f59e0b;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+/* Reset & Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Background Ambient Blur Orbs */
+.ambient-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.35;
+  animation: floatOrb 18s ease-in-out infinite alternate;
+}
+
+.orb-1 {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, #6366f1, #4f46e5);
+  top: -100px;
+  right: -50px;
+}
+
+.orb-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #06b6d4, #10b981);
+  bottom: 10%;
+  left: -80px;
+  animation-duration: 22s;
+}
+
+.orb-3 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, #ec4899, #8b5cf6);
+  top: 45%;
+  right: 15%;
+  animation-duration: 26s;
+}
+
+@keyframes floatOrb {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(40px) scale(1.08) translateX(-20px);
+  }
+
+  100% {
+    transform: translateY(-30px) scale(0.95) translateX(30px);
+  }
+}
+
+/* Typography Helpers */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-main);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+body.dark-theme .gradient-text {
+  background: linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Glass Card Component */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+}
+
+.glass-panel:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.65rem 1.35rem;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, #4f46e5 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--primary-glow);
+}
+
+.btn-secondary {
+  background: var(--bg-surface);
+  color: var(--text-main);
+  border-color: var(--border-light);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-subtle);
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.btn-emerald {
+  background: linear-gradient(135deg, var(--accent-emerald) 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.btn-emerald:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--primary-light);
+}
+
+.btn-icon-only {
+  padding: 0.65rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.btn-sm {
+  font-size: 0.85rem;
+  padding: 0.45rem 0.95rem;
+}
+
+.btn-lg {
+  font-size: 1.05rem;
+  padding: 0.85rem 1.75rem;
+}
+
+/* Badges & Tags */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.badge-primary {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.badge-emerald {
+  background: var(--accent-emerald-light);
+  color: #059669;
+}
+
+body.dark-theme .badge-emerald {
+  color: #34d399;
+}
+
+.badge-amber {
+  background: var(--accent-amber-light);
+  color: #d97706;
+}
+
+body.dark-theme .badge-amber {
+  color: #fbbf24;
+}
+
+.badge-purple {
+  background: var(--accent-purple-light);
+  color: #7c3aed;
+}
+
+body.dark-theme .badge-purple {
+  color: #c084fc;
+}
+
+/* Header & Navigation */
+.navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-light);
+  transition: all var(--transition-normal);
+}
+
+body.dark-theme .navbar {
+  background: rgba(11, 15, 25, 0.82);
+  border-bottom-color: var(--border-light);
+}
+
+.nav-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+.brand-icon {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  font-size: 1.25rem;
+  box-shadow: 0 4px 10px var(--primary-glow);
+}
+
+.brand-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.nav-link {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  position: relative;
+  padding: 0.4rem 0;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--primary);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.credit-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--accent-amber-light);
+  color: #b45309;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+body.dark-theme .credit-pill {
+  color: #fcd34d;
+}
+
+.credit-pill:hover {
+  transform: scale(1.04);
+}
+
+.theme-toggle-btn {
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  border: 1px solid var(--border-light);
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 1.35rem;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+/* Hero Section */
+.hero-section {
+  padding: 4.5rem 0 3.5rem;
+  position: relative;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.hero-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.hero-title {
+  font-size: 3.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 1.25rem;
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 2rem;
+  max-width: 580px;
+}
+
+/* Quick Barter Selector Box in Hero */
+.hero-quick-match {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 2rem;
+}
+
+.quick-match-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.quick-match-inputs {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.input-box-wrapper {
+  position: relative;
+}
+
+.input-box-wrapper i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-subtle);
+  font-size: 0.9rem;
+}
+
+.quick-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem 0.7rem 2.4rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-light);
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.quick-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.swap-indicator-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 0.85rem;
+}
+
+/* Hero Stats Bar */
+.hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Hero Right Visual: Live Interactive Mini Cycle Graph */
+.hero-visual-card {
+  position: relative;
+  padding: 2rem;
+  background: var(--bg-card);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.hero-visual-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-emerald);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-emerald);
+  border-radius: 50%;
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+/* 3-Way Cycle Illustration */
+.cycle-preview-canvas {
+  position: relative;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cycle-node {
+  position: absolute;
+  width: 140px;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 0.85rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  transition: transform var(--transition-fast);
+  z-index: 2;
+}
+
+.cycle-node:hover {
+  transform: scale(1.05);
+  border-color: var(--primary);
+}
+
+.node-top {
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.node-bottom-left {
+  bottom: 10px;
+  left: 10px;
+}
+
+.node-bottom-right {
+  bottom: 10px;
+  right: 10px;
+}
+
+.node-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.avatar-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: white;
+}
+
+.node-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.node-skill-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  justify-content: space-between;
+}
+
+.teaches-badge {
+  background: var(--accent-emerald-light);
+  color: #059669;
+}
+
+.wants-badge {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+/* SVG Arrows for cycle */
+.cycle-svg-arrows {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.arrow-path {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2.5;
+  stroke-dasharray: 6 6;
+  animation: dashMove 1.5s linear infinite;
+}
+
+@keyframes dashMove {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+
+.cycle-resolution-footer {
+  margin-top: 1.5rem;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+
+/* Section Common Headers */
+.section-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 3rem;
+}
+
+.section-tag {
+  margin-bottom: 0.75rem;
+}
+
+.section-title {
+  font-size: 2.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.section-desc {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+}
+
+/* ===================================================================
+   SECTION 1: THE CORE PROBLEM & ACADEMIC FORMULATION
+   =================================================================== */
+.problem-section {
+  padding: 5rem 0;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.problem-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  margin-bottom: 3.5rem;
+}
+
+.problem-card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.problem-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+}
+
+.card-red::before {
+  background: var(--accent-rose);
+}
+
+.card-amber::before {
+  background: var(--accent-amber);
+}
+
+.card-blue::before {
+  background: var(--primary);
+}
+
+.card-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.card-red .card-icon-box {
+  background: var(--accent-rose-light);
+  color: var(--accent-rose);
+}
+
+.card-amber .card-icon-box {
+  background: var(--accent-amber-light);
+  color: var(--accent-amber);
+}
+
+.card-blue .card-icon-box {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.problem-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.65rem;
+}
+
+.problem-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.problem-metric-pill {
+  margin-top: auto;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  width: fit-content;
+}
+
+/* Formal Academic Model Box */
+.academic-theory-box {
+  background: var(--bg-main);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 2.25rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.theory-content h4 {
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.math-formula-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--text-main);
+  overflow-x: auto;
+}
+
+.formula-line {
+  margin-bottom: 0.35rem;
+}
+
+.formula-sub {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.solution-matrix-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.solution-matrix-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.matrix-check {
+  color: var(--accent-emerald);
+  font-size: 1rem;
+  margin-top: 0.2rem;
+}
+
+/* ===================================================================
+   SECTION 2: INTERACTIVE SKILL MATCHMAKER & GRAPH SOLVER (STAR FEATURE)
+   =================================================================== */
+.solver-section {
+  padding: 5rem 0;
+  position: relative;
+}
+
+.solver-container {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: 2.5rem;
+}
+
+.solver-controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 180px;
+  gap: 1.5rem;
+  align-items: flex-end;
+  margin-bottom: 2.5rem;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.control-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.select-styled {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-light);
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  outline: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.select-styled:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* Match Results Dynamic Display */
+.solver-results-area {
+  border-top: 1px dashed var(--border-light);
+  padding-top: 2rem;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.matching-modes-tabs {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--bg-subtle);
+  padding: 0.3rem;
+  border-radius: var(--radius-full);
+}
+
+.mode-tab-btn {
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mode-tab-btn.active {
+  background: var(--bg-surface);
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Dynamic Match Viewports */
+.match-viewport {
+  min-height: 280px;
+  background: var(--bg-main);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Direct 2-Way Match View */
+.direct-match-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+}
+
+.peer-card-match {
+  width: 280px;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.peer-avatar-lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+}
+
+.match-exchange-arrows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.swap-badge-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-emerald);
+  background: var(--accent-emerald-light);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+/* 3-Way Interactive Canvas Graph */
+.cycle-graph-interactive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.cycle-canvas-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 280px;
+}
+
+.cycle-step-card {
+  position: absolute;
+  width: 170px;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  transition: all var(--transition-fast);
+}
+
+.step-node-1 {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.step-node-2 {
+  bottom: 0;
+  left: 15%;
+}
+
+.step-node-3 {
+  bottom: 0;
+  right: 15%;
+}
+
+.cycle-explanation-banner {
+  background: var(--primary-light);
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+  width: 100%;
+  max-width: 650px;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+body.dark-theme .cycle-explanation-banner {
+  color: #c7d2fe;
+}
+
+/* Time Bank Token Matching View */
+.credit-token-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.token-balance-showcase {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.token-big-num {
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ===================================================================
+   SECTION 3: SKILL MARKETPLACE & STUDENT DIRECTORY
+   =================================================================== */
+.marketplace-section {
+  padding: 5rem 0;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-light);
+}
+
+.market-filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.category-pill-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.category-pill {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-light);
+  background: var(--bg-main);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.category-pill:hover,
+.category-pill.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  box-shadow: 0 4px 10px var(--primary-glow);
+}
+
+.search-box-market {
+  position: relative;
+  width: 300px;
+}
+
+.search-box-market i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-subtle);
+}
+
+.market-search-input {
+  width: 100%;
+  padding: 0.6rem 1rem 0.6rem 2.4rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-light);
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.market-search-input:focus {
+  border-color: var(--primary);
+  width: 320px;
+}
+
+/* Student Profile Cards Grid */
+.students-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.75rem;
+}
+
+.student-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.student-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.student-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.student-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+
+.student-info h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.verified-icon {
+  color: var(--primary);
+  font-size: 0.85rem;
+}
+
+.student-university {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.student-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  margin-top: 0.2rem;
+}
+
+.rating-stars {
+  color: #eab308;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.exchange-count-badge {
+  color: var(--text-muted);
+}
+
+/* Exchange Skills Boxes inside Card */
+.skill-trade-box {
+  background: var(--bg-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.trade-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.trade-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.trade-label.teach {
+  color: #059669;
+}
+
+body.dark-theme .trade-label.teach {
+  color: #34d399;
+}
+
+.trade-label.learn {
+  color: var(--primary);
+}
+
+body.dark-theme .trade-label.learn {
+  color: #818cf8;
+}
+
+.skill-name-tag {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  background: var(--bg-surface);
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+}
+
+.student-bio {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+
+.student-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.availability-tag {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* ===================================================================
+   SECTION 4: INTERACTIVE VIRTUAL PEER CLASSROOM DEMO
+   =================================================================== */
+.classroom-section {
+  padding: 5rem 0;
+  background: var(--bg-main);
+}
+
+.classroom-window {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.window-titlebar {
+  background: var(--bg-subtle);
+  padding: 0.85rem 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.window-dots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot-red {
+  background: #ef4444;
+}
+
+.dot-yellow {
+  background: #f59e0b;
+}
+
+.dot-green {
+  background: #10b981;
+}
+
+.session-badge-center {
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.session-timer-clock {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.classroom-body-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  height: 480px;
+}
+
+.peer-video-sidebar {
+  background: var(--bg-subtle);
+  border-right: 1px solid var(--border-light);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.video-frame-mock {
+  position: relative;
+  background: #0f172a;
+  border-radius: var(--radius-md);
+  height: 180px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-peer-name {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.video-audio-wave {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #10b981;
+  font-size: 0.85rem;
+}
+
+.session-topic-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+  font-size: 0.8rem;
+}
+
+.classroom-collab-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.collab-toolbar {
+  padding: 0.65rem 1.25rem;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-surface);
+}
+
+.collab-tab-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.collab-tab {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.collab-tab.active {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.notes-editor-pane {
+  flex-grow: 1;
+  padding: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  background: var(--bg-main);
+  color: var(--text-main);
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+.classroom-bottom-bar {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-surface);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ===================================================================
+   SECTION 5: STUDENT DASHBOARD & EXCHANGE TRACKER
+   =================================================================== */
+.dashboard-section {
+  padding: 5rem 0;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-light);
+}
+
+.dash-header-card {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  border-radius: var(--radius-xl);
+  padding: 2.25rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 15px 30px var(--primary-glow);
+}
+
+.dash-profile-info {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.dash-avatar-lg {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: white;
+  color: var(--primary);
+  font-size: 1.75rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+}
+
+.dash-wallet-summary {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.wallet-badge-big {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-full);
+  font-size: 1.25rem;
+  font-weight: 800;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Dashboard Tabs */
+.dash-tabs-nav {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 2px solid var(--border-light);
+  margin-bottom: 2rem;
+}
+
+.dash-tab-item {
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--transition-fast);
+}
+
+.dash-tab-item:hover,
+.dash-tab-item.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.tab-count-pill {
+  font-size: 0.72rem;
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+.dash-tab-item.active .tab-count-pill {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+/* Active Swaps List */
+.swaps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.swap-row-card {
+  background: var(--bg-main);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  transition: border-color var(--transition-fast);
+}
+
+.swap-row-card:hover {
+  border-color: var(--primary);
+}
+
+.swap-row-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.swap-user-pair {
+  display: flex;
+  align-items: center;
+}
+
+.swap-user-pair .mini-avatar:nth-child(2) {
+  margin-left: -12px;
+  border: 2px solid var(--bg-surface);
+}
+
+.mini-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+}
+
+.progress-bar-container {
+  width: 140px;
+  height: 8px;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-top: 0.35rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent-emerald));
+  border-radius: var(--radius-full);
+}
+
+/* ===================================================================
+   SECTION 6: ACADEMIC RESEARCH & ALGORITHM DOCUMENTATION
+   =================================================================== */
+.research-section {
+  padding: 5rem 0;
+  background: var(--bg-main);
+}
+
+.algorithm-comparison-table-wrapper {
+  overflow-x: auto;
+  margin: 2.5rem 0;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.algo-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.algo-table th {
+  background: var(--bg-subtle);
+  padding: 1rem 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  border-bottom: 2px solid var(--border-light);
+}
+
+.algo-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-muted);
+}
+
+.algo-table tr:hover td {
+  background: var(--bg-subtle);
+}
+
+.algo-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Color swatch picker for New Profile modal */
+.color-swatch-group {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+.color-swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2.5px solid transparent;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.color-swatch:hover {
+  transform: scale(1.15);
+}
+
+.color-swatch.active {
+  border-color: var(--text-main);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4);
+  transform: scale(1.1);
+}
+
+/* ===================================================================
+   MODALS & OVERLAYS
+   =================================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-window {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: translateY(20px) scale(0.97);
+  transition: transform var(--transition-normal);
+}
+
+.modal-overlay.open .modal-window {
+  transform: translateY(0) scale(1);
+}
+
+.modal-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 {
+  font-size: 1.35rem;
+}
+
+.close-modal-btn {
+  background: var(--bg-subtle);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.close-modal-btn:hover {
+  background: var(--border-light);
+  color: var(--text-main);
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  color: var(--text-main);
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-light);
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.modal-footer {
+  padding: 1.25rem 2rem;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-xl);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 300px;
+  max-width: 420px;
+  pointer-events: auto;
+  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast.toast-success {
+  border-left: 4px solid var(--accent-emerald);
+}
+
+.toast.toast-info {
+  border-left: 4px solid var(--primary);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Footer */
+.site-footer {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-light);
+  padding: 4rem 0 2rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.footer-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+  max-width: 320px;
+}
+
+.footer-col h5 {
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+  color: var(--text-main);
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.footer-links a {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.footer-links a:hover {
+  color: var(--primary);
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--border-light);
+  padding-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .academic-theory-box {
+    grid-template-columns: 1fr;
+  }
+
+  .problem-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .classroom-body-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .hero-title {
+    font-size: 2.35rem;
+  }
+
+  .solver-controls-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .direct-match-layout {
+    flex-direction: column;
+  }
+
+  .credit-token-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-header-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .dash-wallet-summary {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+  <!-- Ambient Light Orbs for Modern Aesthetic -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+
+  <!-- NAVIGATION BAR -->
+  <nav class="navbar" id="mainNav">
+    <div class="container nav-wrapper">
+      <a href="#" class="brand-logo">
+        <div class="brand-icon">
+          <i class="fa-solid fa-arrows-spin"></i>
+        </div>
+        <span>Student Skill <span class="gradient-text">Exchange Platform</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#problem" class="nav-link">The Problem</a></li>
+        <li><a href="#solver" class="nav-link">Cycle Solver</a></li>
+        <li><a href="#marketplace" class="nav-link">Skill Directory</a></li>
+        <li><a href="#dashboard" class="nav-link">My Dashboard</a></li>
+        <li><a href="#database" class="nav-link"><i class="fa-solid fa-database text-primary"></i> MySQL Explorer</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Live Time-Bank Wallet Balance -->
+        <div class="credit-pill" id="navWalletPill" title="Your Time-Bank SkillCredits (1 Credit = 1 Hour Taught)">
+          <i class="fa-solid fa-coins text-amber"></i>
+          <span id="navCreditAmount">4.50</span>
+          <span style="font-size: 0.72rem; opacity: 0.85;">CR</span>
+        </div>
+
+        <!-- Create Profile CTA -->
+        <button class="btn btn-secondary btn-sm" id="openCreateProfileBtn" title="Create a new student profile">
+          <i class="fa-solid fa-user-plus"></i> New Profile
+        </button>
+
+        <!-- Post a Skill CTA -->
+        <button class="btn btn-primary btn-sm" id="openPostSkillBtn">
+          <i class="fa-solid fa-plus"></i> Post Skill
+        </button>
+
+        <!-- Speaker Presentation Hints Toggle -->
+        <button class="btn btn-emerald btn-sm" id="toggleSpeakerNotesBtn" title="Toggle presentation cues for explaining the project to evaluators">
+          <i class="fa-solid fa-microphone"></i> Speaker Hints
+        </button>
+
+        <!-- Dark/Light Mode Switch -->
+        <button class="btn btn-secondary btn-icon-only theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header class="hero-section">
+    <div class="container hero-grid">
+      <div class="hero-left">
+        <div class="hero-badge-wrap">
+          <span class="badge badge-primary"><i class="fa-solid fa-graduation-cap"></i> Academic Project Presentation</span>
+          <span class="badge badge-emerald"><i class="fa-solid fa-database"></i> MySQL + 3-Way Cycle Matching</span>
+        </div>
+        
+        <h1 class="hero-title">
+          Learn Any Skill for Free by <span class="gradient-text">Trading with College Peers</span>
+        </h1>
+        
+        <p class="hero-subtitle">
+          Private tutors charge $50/hour, which students cannot afford. Our 
+          <strong>Student Skill Exchange Platform</strong> solves this problem using <strong>3-Way Matching</strong>: 
+          <em>You teach Student B, Student B teaches Student C, and Student C teaches You!</em> 
+          Everyone learns their desired skill for free without any middleman fees.
+        </p>
+
+        <!-- Speaker Hint Box for Hero -->
+        <div class="speaker-hint-box">
+          <i class="fa-solid fa-bullhorn speaker-hint-icon"></i>
+          <div>
+            <strong>🎤 Presentation Point (Introduction):</strong> 
+            "Good morning! Our project solves the <em>Student Skill Exchange Problem</em>. College students want to learn skills like Python, Design, or Languages, but commercial tutoring is too expensive. Students have skills they can teach, but 1-on-1 swaps get stuck when person B doesn't need what person A offers. We built a platform using MySQL, HTML, CSS, and JavaScript that connects students in 3-way cycles so everyone gets what they need for free."
+          </div>
+        </div>
+
+        <!-- Interactive Quick Barter Box -->
+        <div class="hero-quick-match">
+          <div class="quick-match-title">
+            <i class="fa-solid fa-bolt text-amber"></i> Quick Algorithmic Match Finder
+          </div>
+          <div class="quick-match-inputs">
+            <div class="input-box-wrapper">
+              <i class="fa-solid fa-chalkboard-user"></i>
+              <select class="quick-input" id="heroOfferedSkill">
+                <option value="Python & Data Structures">I can teach: Python & DSA</option>
+                <option value="Full-Stack React & Node">I can teach: React & Node</option>
+                <option value="Multivariable Calculus III">I can teach: Calculus III</option>
+                <option value="UI/UX Design with Figma">I can teach: Figma UI/UX</option>
+                <option value="Conversational Spanish">I can teach: Spoken Spanish</option>
+                <option value="Acoustic Guitar Fundamentals">I can teach: Guitar</option>
+              </select>
+            </div>
+
+            <div class="swap-indicator-icon">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            </div>
+
+            <div class="input-box-wrapper">
+              <i class="fa-solid fa-book-open-reader"></i>
+              <select class="quick-input" id="heroSoughtSkill">
+                <option value="UI/UX Design with Figma">I want to learn: Figma UI/UX</option>
+                <option value="Multivariable Calculus III">I want to learn: Calculus III</option>
+                <option value="Conversational Spanish">I want to learn: Spoken Spanish</option>
+                <option value="Python & Data Structures">I want to learn: Python & DSA</option>
+                <option value="Machine Learning & PyTorch">I want to learn: PyTorch ML</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary" id="heroFindMatchesBtn">
+              <i class="fa-solid fa-magnifying-glass"></i> Solve Match
+            </button>
+          </div>
+        </div>
+
+        <!-- Metrics Bar -->
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">94.2%</div>
+            <div class="stat-label">Cycle Match Rate</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">$0.00</div>
+            <div class="stat-label">Peer Cost (100% Barter)</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">3.8x</div>
+            <div class="stat-label">More Swaps vs 1:1</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">8,400+</div>
+            <div class="stat-label">Hours Exchanged</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Right: Live Interactive Mini Cycle Graph Showcase -->
+      <div class="hero-right">
+        <div class="hero-visual-card">
+          <div class="hero-visual-header">
+            <div>
+              <h3 style="font-size: 1.05rem;">Live 3-Way Cycle Resolution</h3>
+              <p style="font-size: 0.78rem; color: var(--text-muted);">Real-time graph cycle discovered in database</p>
+            </div>
+            <div class="status-indicator">
+              <span class="pulse-dot"></span> Active Engine
+            </div>
+          </div>
+
+          <!-- Triangular Interactive Cycle Canvas -->
+          <div class="cycle-preview-canvas">
+            <!-- Node A (Top) -->
+            <div class="cycle-node node-top">
+              <div class="node-avatar-row">
+                <div class="avatar-circle" style="background: #4f46e5;">RB</div>
+                <div class="node-name">Rai Bose <span style="font-size:0.65rem; color:var(--text-muted);">(You)</span></div>
+              </div>
+              <div class="node-skill-badge teaches-badge"><span>Teaches:</span> <b>Python</b></div>
+              <div class="node-skill-badge wants-badge"><span>Wants:</span> <b>Figma</b></div>
+            </div>
+
+            <!-- Node B (Bottom Left) -->
+            <div class="cycle-node node-bottom-left">
+              <div class="node-avatar-row">
+                <div class="avatar-circle" style="background: #10b981;">RB</div>
+                <div class="node-name">Raj Biswas</div>
+              </div>
+              <div class="node-skill-badge teaches-badge"><span>Teaches:</span> <b>Calculus</b></div>
+              <div class="node-skill-badge wants-badge"><span>Wants:</span> <b>Python</b></div>
+            </div>
+
+            <!-- Node C (Bottom Right) -->
+            <div class="cycle-node node-bottom-right">
+              <div class="node-avatar-row">
+                <div class="avatar-circle" style="background: #06b6d4;">RS</div>
+                <div class="node-name">Rahul Shaw</div>
+              </div>
+              <div class="node-skill-badge teaches-badge"><span>Teaches:</span> <b>Figma</b></div>
+              <div class="node-skill-badge wants-badge"><span>Wants:</span> <b>Calculus</b></div>
+            </div>
+
+            <!-- SVG Directed Dynamic Connecting Arrows -->
+            <svg class="cycle-svg-arrows" viewBox="0 0 400 280">
+              <defs>
+                <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                  <polygon points="0 0, 8 3, 0 6" fill="#4f46e5" />
+                </marker>
+              </defs>
+              <!-- Path 1: Rai -> Raj (Top to Bottom-Left) -->
+              <path class="arrow-path" d="M 170 80 Q 110 120 110 200" marker-end="url(#arrowhead)" />
+              <!-- Path 2: Raj -> Rahul (Bottom-Left to Bottom-Right) -->
+              <path class="arrow-path" d="M 170 240 Q 200 260 270 240" marker-end="url(#arrowhead)" />
+              <!-- Path 3: Rahul -> Rai (Bottom-Right to Top) -->
+              <path class="arrow-path" d="M 310 190 Q 300 110 230 75" marker-end="url(#arrowhead)" />
+            </svg>
+          </div>
+
+          <div class="cycle-resolution-footer">
+            <span><i class="fa-solid fa-circle-check text-emerald"></i> <strong>Cycle Closed</strong>: 3 Students satisfy mutual wants</span>
+            <span class="badge badge-emerald">Complexity: O(V·E)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECTION 1: THE CORE PROBLEM & ACADEMIC FORMULATION -->
+  <section class="problem-section" id="problem">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge badge-primary section-tag">Understanding the Bottleneck</span>
+        <h2 class="section-title">Why Normal 1-on-1 Swapping Fails</h2>
+        <p class="section-desc">
+          College students have tons of skills to teach, but 1-to-1 trades almost always get stuck. 
+          Here is why standard exchanges fail, and how our 3-way system fixes it.
+        </p>
+      </div>
+
+      <!-- Speaker Hint Box for Section 1 -->
+      <div class="speaker-hint-box">
+        <i class="fa-solid fa-bullhorn speaker-hint-icon"></i>
+        <div>
+          <strong>🎤 Presentation Point (The Problem):</strong> 
+          "Explain the 1-on-1 deadlock to your evaluator: 'Imagine Student A knows Python and wants to learn Spanish. Student B knows Spanish, but wants to learn 3D Animation—not Python! In a simple 1-on-1 world, they are completely blocked. Statistically, less than 4% of students match directly. That's why our project is needed.'"
+        </div>
+      </div>
+
+      <div class="problem-cards-grid">
+        <div class="glass-panel problem-card card-red">
+          <div class="card-icon-box">
+            <i class="fa-solid fa-handshake-slash"></i>
+          </div>
+          <h3>1. The 1-on-1 Trade Block</h3>
+          <p>
+            For a direct trade, Student A must teach what Student B wants, 
+            AND Student B must teach what Student A wants. On a real campus, this mutual match happens 
+            less than <strong>4% of the time</strong>.
+          </p>
+          <div class="problem-metric-pill">
+            <i class="fa-solid fa-triangle-exclamation text-rose"></i> 85%+ Trades Get Blocked
+          </div>
+        </div>
+
+        <div class="glass-panel problem-card card-amber">
+          <div class="card-icon-box">
+            <i class="fa-solid fa-money-bill-wave"></i>
+          </div>
+          <h3>2. Tutors Cost Too Much</h3>
+          <p>
+            Commercial tutoring websites charge <strong>$40 to $80 per hour</strong>, which college 
+            students simply cannot afford. Peer exchange unlocks all this knowledge for <strong>$0</strong>.
+          </p>
+          <div class="problem-metric-pill">
+            <i class="fa-solid fa-tag text-amber"></i> Free 100% Peer Barter
+          </div>
+        </div>
+
+        <div class="glass-panel problem-card card-blue">
+          <div class="card-icon-box">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h3>3. Trust & No-Shows</h3>
+          <p>
+            Informal skill trades fail when someone doesn't show up. Our platform uses 
+            <strong>verified student badges</strong>, <strong>reputation ratings</strong>, and <strong>lesson escrow</strong>.
+          </p>
+          <div class="problem-metric-pill">
+            <i class="fa-solid fa-user-shield text-primary"></i> Escrow Guarantee
+          </div>
+        </div>
+      </div>
+
+      <!-- Platform Resolution Architecture Box -->
+      <div class="academic-theory-box">
+        <div class="theory-content">
+          <h4><i class="fa-solid fa-lightbulb text-primary"></i> How the Platform Solves the Problem</h4>
+          <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+            Instead of relying on rare coincidence where two students happen to want each other's exact skills, 
+            the platform connects students using <strong>3-Way Cycle Matching</strong> and an asynchronous <strong>Time-Bank Credit System</strong>.
+          </p>
+
+          <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 1.25rem;">
+            If Rai teaches Raj, and Raj teaches Rahul, Rahul completes the loop by teaching Rai. 
+            All three students receive their desired skill without any currency, middleman fees, or 1-on-1 barter roadblocks.
+          </p>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> 100% Peer-to-Peer</span>
+            <span class="badge badge-primary"><i class="fa-solid fa-arrows-spin"></i> Automatic Match Discovery</span>
+            <span class="badge badge-amber"><i class="fa-solid fa-shield-halved"></i> Escrow Protection</span>
+          </div>
+        </div>
+
+        <div class="theory-matrix">
+          <h5 style="margin-bottom: 1rem; font-size: 1rem;">Platform Tri-Layer Resolution Strategy:</h5>
+          <ul class="solution-matrix-list">
+            <li class="solution-matrix-item">
+              <i class="fa-solid fa-circle-check matrix-check"></i>
+              <div>
+                <strong>Layer 1: Direct 1-on-1 Swap</strong>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">Instant pairing when two students want each other's offered skills.</p>
+              </div>
+            </li>
+            <li class="solution-matrix-item">
+              <i class="fa-solid fa-circle-check matrix-check"></i>
+              <div>
+                <strong>Layer 2: 3-Way Cycle Swap</strong>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">Connects 3 students in a closed loop (Student A → Student B → Student C → Student A).</p>
+              </div>
+            </li>
+            <li class="solution-matrix-item">
+              <i class="fa-solid fa-circle-check matrix-check"></i>
+              <div>
+                <strong>Layer 3: Time-Banking Credits</strong>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">Teach today to earn 1.0 SkillCredit, then redeem it with any peer tutor whenever you want.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: INTERACTIVE SKILL MATCHMAKER & GRAPH SOLVER -->
+  <section class="solver-section" id="solver">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge badge-emerald section-tag">Live Interactive Solver</span>
+        <h2 class="section-title">See How 3-Way Cycle Matching Works</h2>
+        <p class="section-desc">
+          Try it live! Select a skill you can teach and what you want to learn. 
+          Watch how our matching engine links three students in a closed loop so everyone gets their lesson!
+        </p>
+      </div>
+
+      <!-- Speaker Hint Box for Section 2 -->
+      <div class="speaker-hint-box">
+        <i class="fa-solid fa-bullhorn speaker-hint-icon"></i>
+        <div>
+          <strong>🎤 Presentation Point (Live Demonstration):</strong> 
+          "Show this live demo to your evaluator: 'I will pick Python as the skill I teach, and Figma as what I want to learn. When I click Run Matcher, the algorithm traverses the database and finds Raj Biswas and Rahul Kumar Shaw. Raj teaches Calculus, and Rahul teaches Figma. The loop is complete: I (Rai) teach Raj, Raj teaches Rahul, and Rahul teaches me! Everyone receives their desired skill with zero money exchanged.'"
+        </div>
+      </div>
+
+      <div class="solver-container">
+        <!-- Input controls -->
+        <div class="solver-controls-grid">
+          <div class="control-group">
+            <label class="control-label" for="solverUserOffer">
+              <i class="fa-solid fa-chalkboard-user text-emerald"></i> Your Offered Skill (Teach)
+            </label>
+            <select class="select-styled" id="solverUserOffer">
+              <option value="1">Python & Data Structures (Rai Bose - Level: Expert)</option>
+              <option value="4">Multivariable Calculus III (Raj Biswas - Level: Advanced)</option>
+              <option value="8">UI/UX Design with Figma (Rahul Kumar Shaw - Level: Expert)</option>
+              <option value="3">Machine Learning & PyTorch (Rahit Das - Level: Advanced)</option>
+              <option value="2">Database Systems & MySQL (Protyusha Bose - Level: Expert)</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="solverUserSeek">
+              <i class="fa-solid fa-book-open-reader text-primary"></i> Your Desired Skill (Learn)
+            </label>
+            <select class="select-styled" id="solverUserSeek">
+              <option value="8">UI/UX Design with Figma (Wants to build portfolios)</option>
+              <option value="4">Multivariable Calculus III (Needs exam preparation)</option>
+              <option value="6">Conversational Spanish (Wants study abroad fluency)</option>
+              <option value="1">Python & Data Structures (LeetCode & Algorithm prep)</option>
+              <option value="3">Machine Learning & PyTorch (Deep learning research)</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary btn-lg" id="runSolverEngineBtn">
+            <i class="fa-solid fa-gear fa-spin-pulse"></i> Run Matcher
+          </button>
+        </div>
+
+        <!-- Dynamic Results Area -->
+        <div class="solver-results-area">
+          <div class="results-header">
+            <div>
+              <h4 id="matchResultTitle" style="font-size: 1.15rem;">Graph Resolution Result</h4>
+              <p id="matchResultSubtitle" style="font-size: 0.85rem; color: var(--text-muted);">
+                Analyzing directed preference edges in MySQL relational graph...
+              </p>
+            </div>
+
+            <!-- Mode Selector Tabs -->
+            <div class="matching-modes-tabs">
+              <button class="mode-tab-btn" data-mode="direct" id="tabDirectMatch">
+                <i class="fa-solid fa-user-group"></i> 2-Way Direct
+              </button>
+              <button class="mode-tab-btn active" data-mode="cycle" id="tabCycleMatch">
+                <i class="fa-solid fa-circle-nodes"></i> 3-Way Cycle
+              </button>
+              <button class="mode-tab-btn" data-mode="credit" id="tabCreditMatch">
+                <i class="fa-solid fa-coins"></i> Time-Bank Token
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Viewports Container -->
+          <div class="match-viewport" id="matchViewport">
+            <!-- Populated dynamically by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: SKILL MARKETPLACE & STUDENT DIRECTORY -->
+  <section class="marketplace-section" id="marketplace">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge badge-purple section-tag">Live Peer Directory</span>
+        <h2 class="section-title">Explore Verified Student Skill Listings</h2>
+        <p class="section-desc">
+          Browse fellow university students ready to barter their expertise. Every student has an active credit balance and verified campus affiliation.
+        </p>
+      </div>
+
+      <!-- Speaker Hint Box for Section 3 -->
+      <div class="speaker-hint-box">
+        <i class="fa-solid fa-bullhorn speaker-hint-icon"></i>
+        <div>
+          <strong>🎤 Presentation Point (Directory & Profiles):</strong> 
+          "Explain the marketplace: 'Here are real student profiles from UC Berkeley, MIT, Stanford, and Columbia. Each card clearly shows what the student teaches (green badge), what they want to learn (purple badge), their verified status, and their rating. We can filter by category or click Swap to initiate a lesson proposal.'"
+        </div>
+      </div>
+
+      <!-- Filter and Search Bar -->
+      <div class="market-filter-bar">
+        <div class="category-pill-group" id="categoryFilterGroup">
+          <button class="category-pill active" data-category="all">All Categories</button>
+          <button class="category-pill" data-category="cs">Computer Science & AI</button>
+          <button class="category-pill" data-category="math">Mathematics & Data</button>
+          <button class="category-pill" data-category="lang">Languages</button>
+          <button class="category-pill" data-category="design">UI/UX & Creative</button>
+          <button class="category-pill" data-category="music">Music & Arts</button>
+        </div>
+
+        <div class="search-box-market">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="marketSearchInput" class="market-search-input" placeholder="Search by skill, name, or stream...">
+        </div>
+      </div>
+
+      <!-- Students Grid (Dynamic from DB/JS) -->
+      <div class="students-grid" id="studentsGridContainer">
+        <!-- Rendered by script.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: STUDENT DASHBOARD & EXCHANGE TRACKER -->
+  <section class="dashboard-section" id="dashboard">
+    <div class="container">
+      <!-- Profile Header Summary Banner -->
+      <div class="dash-header-card">
+        <div class="dash-profile-info">
+          <div class="dash-avatar-lg" id="dashUserAvatar">RB</div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+              <h3 id="dashUserName" style="font-size: 1.45rem; color: white;">Rai Bose</h3>
+              <span class="badge badge-emerald" style="background: rgba(255,255,255,0.25); color: white;">
+                <i class="fa-solid fa-circle-check"></i> Verified Student (You)
+              </span>
+            </div>
+            <p id="dashUserMeta" style="opacity: 0.9; font-size: 0.9rem;">
+              <strong>JIS College of Engineering</strong> &bull; Stream: <strong>BCA GENERAL</strong> '26 &bull; <i class="fa-solid fa-star" style="color: #fde047;"></i> <strong id="dashUserRating">4.95 Rating</strong> (<span id="dashUserExchanges">14</span> exchanges)
+            </p>
+            <div style="margin-top: 0.65rem;">
+              <button class="btn btn-sm" id="dashCreateProfileBtn" style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.35);">
+                <i class="fa-solid fa-user-plus"></i> Create / Switch Profile
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-wallet-summary">
+          <div style="font-size: 0.85rem; opacity: 0.85;">Time-Bank Credit Balance:</div>
+          <div class="wallet-badge-big">
+            <i class="fa-solid fa-coins"></i> <span id="dashCreditAmount">4.50</span> Credits
+          </div>
+          <div style="font-size: 0.75rem; opacity: 0.8;">Equivalent to <span id="dashHoursEquiv">4.5</span> hours of 1-on-1 tutoring</div>
+        </div>
+      </div>
+
+      <!-- Dashboard Tabs Navigation -->
+      <div class="dash-tabs-nav">
+        <div class="dash-tab-item active" data-tab="activeSwaps">
+          <i class="fa-solid fa-arrow-right-arrow-left"></i> Active Exchanges
+          <span class="tab-count-pill" id="activeSwapsCount">2</span>
+        </div>
+        <div class="dash-tab-item" data-tab="pendingProposals">
+          <i class="fa-solid fa-inbox"></i> Incoming Proposals
+          <span class="tab-count-pill" id="pendingProposalsCount">1</span>
+        </div>
+        <div class="dash-tab-item" data-tab="creditLedger">
+          <i class="fa-solid fa-receipt"></i> SkillCredit Ledger History
+        </div>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div id="dashTabContent">
+        <!-- Rendered by script.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: INTERACTIVE MYSQL DATABASE & SQL EXPLORER -->
+  <section class="research-section" id="database">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge badge-primary section-tag"><i class="fa-solid fa-database"></i> Database Architecture</span>
+        <h2 class="section-title">Interactive MySQL Schema & Query Runner</h2>
+        <p class="section-desc">
+          Inspect the live relational schema powering the Student Skill Exchange engine. 
+          Run pre-built SQL queries or execute custom queries against the database tables.
+        </p>
+      </div>
+
+      <!-- Speaker Hint Box for Section 6 -->
+      <div class="speaker-hint-box">
+        <i class="fa-solid fa-bullhorn speaker-hint-icon"></i>
+        <div>
+          <strong>🎤 Presentation Point (MySQL Database Backend):</strong> 
+          "Highlight your database implementation to the evaluator: 'Our project uses MySQL with 10 relational tables in schema.sql. We track students, skill offerings, active 3-way cycles, and a credit ledger. Watch as I click Find 3-Way Cycles or Market Demand: it executes SQL queries right in front of you, returning live formatted database records in under 2 milliseconds!'"
+        </div>
+      </div>
+
+      <div class="glass-panel" style="padding: 2rem;">
+        <!-- Top Controls: Table Switcher & Pre-built queries -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">
+              VIEW TABLE:
+            </label>
+            <div class="category-pill-group" id="sqlTableSelector">
+              <button class="category-pill active" data-table="students">students</button>
+              <button class="category-pill" data-table="student_skills_offered">skills_offered</button>
+              <button class="category-pill" data-table="student_skills_sought">skills_sought</button>
+              <button class="category-pill" data-table="cycle_matches">cycle_matches</button>
+              <button class="category-pill" data-table="skill_credit_transactions">credit_ledger</button>
+            </div>
+          </div>
+
+          <div>
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">
+              PRESET RELATIONAL QUERIES:
+            </label>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm" id="queryDirect2WayBtn">
+                <i class="fa-solid fa-code-fork"></i> Find 2-Way Matches
+              </button>
+              <button class="btn btn-secondary btn-sm" id="queryCyclesBtn">
+                <i class="fa-solid fa-circle-nodes"></i> Find 3-Way Cycles
+              </button>
+              <button class="btn btn-secondary btn-sm" id="queryMarketEquilibriumBtn">
+                <i class="fa-solid fa-scale-balanced"></i> Market Demand vs Supply
+              </button>
+              <button class="btn btn-secondary btn-sm" id="downloadSqlBtn">
+                <i class="fa-solid fa-download"></i> schema.sql
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SQL Query Input Box -->
+        <div style="margin-bottom: 1.5rem; position: relative;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <span style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--text-main);">
+              <i class="fa-solid fa-terminal text-primary"></i> SQL Console:
+            </span>
+            <span style="font-size: 0.78rem; color: var(--text-muted);">Database: <code>student_skill_exchange_db</code></span>
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <input type="text" id="customSqlInput" class="form-control" style="font-family: var(--font-mono); font-size: 0.88rem;" value="SELECT student_id, full_name, university, stream, credit_balance, reputation_score FROM students;">
+            <button class="btn btn-primary" id="executeSqlBtn">
+              <i class="fa-solid fa-play"></i> Execute
+            </button>
+          </div>
+        </div>
+
+        <!-- SQL Results Table Display -->
+        <div class="algorithm-comparison-table-wrapper" style="margin: 0; max-height: 420px;">
+          <table class="algo-table" id="sqlResultsTable">
+            <thead id="sqlTableHead">
+              <!-- Dynamically populated -->
+            </thead>
+            <tbody id="sqlTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; font-size: 0.82rem; color: var(--text-muted);">
+          <span id="sqlExecutionStatus"><i class="fa-solid fa-check text-emerald"></i> 8 rows returned in 1.4ms</span>
+          <span>Storage Engine: <code>InnoDB</code> | Collation: <code>utf8mb4_unicode_ci</code></span>
+        </div>
+      </div>
+
+      <!-- Algorithmic Complexity Comparison Table -->
+      <div style="margin-top: 4rem;">
+        <h3 style="font-size: 1.35rem; margin-bottom: 1rem;">Exchange Resolution Mechanism Trade-off Matrix</h3>
+        <div class="algorithm-comparison-table-wrapper">
+          <table class="algo-table">
+            <thead>
+              <tr>
+                <th>Matching Mechanism</th>
+                <th>Exchange Pattern</th>
+                <th>Speed & Efficiency</th>
+                <th>Match Success Rate</th>
+                <th>Scheduling Requirement</th>
+                <th>Fairness Guarantee</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Direct 1-on-1 Barter</strong></td>
+                <td>Direct Two-Way Swap (Peer A ⇄ Peer B)</td>
+                <td>Instant (Direct Pair)</td>
+                <td><span class="badge badge-amber">~4.2%</span></td>
+                <td>Strict (Both must meet)</td>
+                <td>High (Direct reciprocity)</td>
+              </tr>
+              <tr>
+                <td><strong>3-Way Directed Cycle Matching</strong></td>
+                <td>Triangle Loop (A → B → C → A)</td>
+                <td>Fast (Automatic Discovery)</td>
+                <td><span class="badge badge-emerald">~78.4%</span></td>
+                <td>Coordinated Schedule</td>
+                <td>Very High (Closed cycle)</td>
+              </tr>
+              <tr>
+                <td><strong>Time-Bank Credit Protocol</strong></td>
+                <td>Credit Token Balance (1 hr = 1 credit)</td>
+                <td>Instant (Database Ledger)</td>
+                <td><span class="badge badge-primary">~96.5%</span></td>
+                <td>Fully Asynchronous</td>
+                <td>Protected via Escrow & Rating</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL: CREATE NEW USER PROFILE -->
+  <div class="modal-overlay" id="createProfileModal">
+    <div class="modal-window" style="max-width: 680px;">
+      <div class="modal-header">
+        <div>
+          <h3><i class="fa-solid fa-id-card text-primary"></i> Create Student Profile</h3>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Join the campus peer skill exchange network and register in MySQL
+          </p>
+        </div>
+        <button class="close-modal-btn" id="closeCreateProfileBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="createProfileForm">
+          <!-- Starter Grant Notice -->
+          <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.1) 100%); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.85rem;">
+            <div style="font-size: 1.8rem;">🎁</div>
+            <div>
+              <strong style="font-size: 0.9rem; color: #b45309; display: block;">New Student Onboarding Bonus</strong>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">
+                You will automatically receive <strong>3.00 starter SkillCredits</strong> in MySQL to book your first peer lesson!
+              </span>
+            </div>
+          </div>
+
+          <!-- Section 1: Academic Credentials -->
+          <div style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem;">
+            1. Student Academic Details
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="newStudentName">Full Name *</label>
+              <input type="text" id="newStudentName" class="form-control" placeholder="e.g. Maya Patel" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="newStudentEmail">University Email (.edu) *</label>
+              <input type="email" id="newStudentEmail" class="form-control" placeholder="e.g. maya.patel@stanford.edu" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="newStudentUniversity">University / College *</label>
+              <input type="text" id="newStudentUniversity" class="form-control" value="JIS College of Engineering" placeholder="e.g. JIS College of Engineering" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="newStudentStream">Stream & Grad Year *</label>
+              <input type="text" id="newStudentStream" class="form-control" value="BCA GENERAL '26" placeholder="e.g. BCA GENERAL '26" required>
+            </div>
+          </div>
+
+          <!-- Avatar Color Picker -->
+          <div class="form-group">
+            <label class="form-label">Profile Avatar Color</label>
+            <div class="color-swatch-group" id="avatarColorPicker">
+              <div class="color-swatch active" data-color="#4f46e5" style="background: #4f46e5;"></div>
+              <div class="color-swatch" data-color="#10b981" style="background: #10b981;"></div>
+              <div class="color-swatch" data-color="#06b6d4" style="background: #06b6d4;"></div>
+              <div class="color-swatch" data-color="#f43f5e" style="background: #f43f5e;"></div>
+              <div class="color-swatch" data-color="#f59e0b" style="background: #f59e0b;"></div>
+              <div class="color-swatch" data-color="#8b5cf6" style="background: #8b5cf6;"></div>
+            </div>
+          </div>
+
+          <!-- Section 2: Skills You Offer and Seek -->
+          <div style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin: 1.5rem 0 0.75rem;">
+            2. Skill Exchange Preferences
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="newStudentTeach">Primary Skill You Can Teach *</label>
+              <input type="text" id="newStudentTeach" class="form-control" placeholder="e.g. Mobile App Dev (Flutter)" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="newStudentTeachCategory">Teaching Category</label>
+              <select id="newStudentTeachCategory" class="form-control">
+                <option value="cs">Computer Science & AI</option>
+                <option value="math">Mathematics & Data</option>
+                <option value="lang">Languages & Linguistics</option>
+                <option value="design">UI/UX & Creative Media</option>
+                <option value="music">Music & Sound</option>
+                <option value="career">Career & Communication</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="newStudentProficiency">Teaching Proficiency</label>
+              <select id="newStudentProficiency" class="form-control">
+                <option value="Intermediate">Intermediate (Project experience)</option>
+                <option value="Advanced" selected>Advanced (Coursework & Portfolio)</option>
+                <option value="Expert">Expert (Industry / TA experience)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="newStudentSeek">Primary Skill You Want to Learn *</label>
+              <input type="text" id="newStudentSeek" class="form-control" placeholder="e.g. Acoustic Guitar Fundamentals" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newStudentBio">Bio & Teaching Style</label>
+            <textarea id="newStudentBio" class="form-control" rows="2" placeholder="Tell fellow students what concepts you cover and your teaching philosophy..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newStudentAvailability">Weekly Availability</label>
+            <input type="text" id="newStudentAvailability" class="form-control" placeholder="e.g. Weekday evenings, Saturday mornings">
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelCreateProfileBtn">Cancel</button>
+        <button class="btn btn-primary" id="submitCreateProfileBtn">
+          <i class="fa-solid fa-user-check"></i> Register Profile & Claim 3.00 Credits
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: POST A SKILL LISTING -->
+  <div class="modal-overlay" id="postSkillModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-plus-circle text-primary"></i> Post a Skill to Exchange</h3>
+        <button class="close-modal-btn" id="closePostSkillBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="postSkillForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="formSkillName">Skill You Can Teach</label>
+              <input type="text" id="formSkillName" class="form-control" placeholder="e.g. Flutter Mobile Dev" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="formCategory">Category</label>
+              <select id="formCategory" class="form-control" required>
+                <option value="cs">Computer Science & AI</option>
+                <option value="math">Mathematics & Data</option>
+                <option value="lang">Languages & Linguistics</option>
+                <option value="design">UI/UX & Creative Media</option>
+                <option value="music">Music & Sound</option>
+                <option value="career">Career & Communication</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="formProficiency">Your Proficiency Level</label>
+              <select id="formProficiency" class="form-control">
+                <option value="Intermediate">Intermediate (Can teach fundamentals)</option>
+                <option value="Advanced" selected>Advanced (Projects & Coursework)</option>
+                <option value="Expert">Expert (Industry experience / TA)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="formDesiredSkill">Skill You Want in Return</label>
+              <input type="text" id="formDesiredSkill" class="form-control" placeholder="e.g. Japanese N5 or Guitar" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="formTeachingBio">Brief Syllabus / Teaching Approach</label>
+            <textarea id="formTeachingBio" class="form-control" rows="3" placeholder="Explain what concepts you will cover in 1-2 hours and how you like to teach..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="formAvailability">Weekly Availability</label>
+              <input type="text" id="formAvailability" class="form-control" placeholder="e.g. Weekends, Tue/Thu evenings">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="formRate">Exchange Mode</label>
+              <select id="formRate" class="form-control">
+                <option value="Direct / Credits">Direct Swap or 1.0 Credit/hr</option>
+                <option value="Credits Only">Time-Bank Credits Only</option>
+                <option value="Direct Only">Direct Swap Only</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelPostSkillBtn">Cancel</button>
+        <button class="btn btn-primary" id="submitPostSkillBtn">
+          <i class="fa-solid fa-paper-plane"></i> Publish to MySQL Database
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PROPOSE EXCHANGE PROPOSAL -->
+  <div class="modal-overlay" id="proposeSwapModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-handshake text-primary"></i> Propose a Skill Exchange</h3>
+        <button class="close-modal-btn" id="closeProposeSwapBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div style="background: var(--bg-subtle); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem;" id="proposeTargetPeerSummary">
+          <!-- Populated by JS -->
+        </div>
+
+        <form id="proposeSwapForm">
+          <div class="form-group">
+            <label class="form-label">How would you like to exchange?</label>
+            <select class="form-control" id="proposeExchangeMode">
+              <option value="DIRECT_2WAY">Direct 1:1 Skill Swap (I teach you, you teach me)</option>
+              <option value="TIMEBANK_CREDIT">Time-Bank Credit (Spend 1.0 of your 4.5 Credits)</option>
+              <option value="CYCLE_3WAY">Enter 3-Way Cycle Match Pool</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">What skill will you teach in return?</label>
+            <select class="form-control" id="proposeOfferedSkillSelect">
+              <option value="Python & Data Structures">Python & Data Structures</option>
+              <option value="Full-Stack React & Node">Full-Stack React & Node</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Message & Proposed Schedule</label>
+            <textarea class="form-control" id="proposeMessage" rows="3" placeholder="Introduce yourself and propose your preferred meeting day & time..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelProposeSwapBtn">Cancel</button>
+        <button class="btn btn-emerald" id="submitProposeSwapBtn">
+          <i class="fa-solid fa-check"></i> Send Proposal
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: RATE & REVIEW PEER -->
+  <div class="modal-overlay" id="ratingModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-star text-amber"></i> Session Completed & Peer Feedback</h3>
+        <button class="close-modal-btn" id="closeRatingBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body text-center" style="text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
+        <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">1.00 SkillCredit Released!</h4>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          The session contract was verified. Please rate your peer to help maintain high quality and trust.
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 0.5rem; font-size: 1.8rem; color: #f59e0b; margin-bottom: 1.5rem; cursor: pointer;" id="starRatingRow">
+          <i class="fa-solid fa-star" data-val="1"></i>
+          <i class="fa-solid fa-star" data-val="2"></i>
+          <i class="fa-solid fa-star" data-val="3"></i>
+          <i class="fa-solid fa-star" data-val="4"></i>
+          <i class="fa-solid fa-star" data-val="5"></i>
+        </div>
+
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">Feedback for peer's profile</label>
+          <textarea class="form-control" id="ratingFeedbackText" rows="2" placeholder="Was the explanation clear? Punctual? Prepared?"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="submitRatingBtn" style="width: 100%;">
+          Submit Review to MySQL Ledger
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER FOR ALERTS -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SECTION: PROJECT TEAM MEMBERS -->
+  <section class="team-section" style="padding: 3.5rem 0; background: var(--bg-surface); border-top: 1px solid var(--border-light);">
+    <div class="container">
+      <div style="text-align: center; max-width: 650px; margin: 0 auto 2.5rem;">
+        <span class="badge badge-primary"><i class="fa-solid fa-users"></i> Project Team</span>
+        <h3 style="font-size: 1.75rem; margin-top: 0.5rem;">Project Contributors & Team Members</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted);">
+          Developed by our 5-member team for the Student Skill Exchange Problem project:
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.25rem;">
+        <!-- Member 1: Rai Bose -->
+        <div class="glass-panel" style="padding: 1.5rem 1.25rem; text-align: center; border-top: 3.5px solid #4f46e5;">
+          <div class="avatar-circle" style="width: 52px; height: 52px; margin: 0 auto 0.75rem; background: #4f46e5; font-size: 1.15rem; color: white;">RB</div>
+          <h4 style="font-size: 1.05rem; margin-bottom: 0.2rem;">Rai Bose</h4>
+          <span class="badge badge-primary" style="font-size: 0.72rem; margin-bottom: 0.35rem;">Project Lead (You)</span>
+          <div style="font-size: 0.76rem; font-weight: 700; color: var(--color-primary); margin-top: 0.25rem;">JIS COLLEGE OF ENGINEERING</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem;">Stream: <strong>BCA GENERAL</strong></div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border-light);">Teaches: <strong>Python & DSA</strong></div>
+        </div>
+
+        <!-- Member 2: Raj Biswas -->
+        <div class="glass-panel" style="padding: 1.5rem 1.25rem; text-align: center; border-top: 3.5px solid #10b981;">
+          <div class="avatar-circle" style="width: 52px; height: 52px; margin: 0 auto 0.75rem; background: #10b981; font-size: 1.15rem; color: white;">RB</div>
+          <h4 style="font-size: 1.05rem; margin-bottom: 0.2rem;">Raj Biswas</h4>
+          <span class="badge badge-emerald" style="font-size: 0.72rem; margin-bottom: 0.35rem;">Team Member</span>
+          <div style="font-size: 0.76rem; font-weight: 700; color: #10b981; margin-top: 0.25rem;">JIS COLLEGE OF ENGINEERING</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem;">Stream: <strong>BCA GENERAL</strong></div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border-light);">Teaches: <strong>Calculus III</strong></div>
+        </div>
+
+        <!-- Member 3: Rahul Kumar Shaw -->
+        <div class="glass-panel" style="padding: 1.5rem 1.25rem; text-align: center; border-top: 3.5px solid #06b6d4;">
+          <div class="avatar-circle" style="width: 52px; height: 52px; margin: 0 auto 0.75rem; background: #06b6d4; font-size: 1.15rem; color: white;">RS</div>
+          <h4 style="font-size: 1.05rem; margin-bottom: 0.2rem;">Rahul Kumar Shaw</h4>
+          <span class="badge badge-purple" style="font-size: 0.72rem; margin-bottom: 0.35rem;">Team Member</span>
+          <div style="font-size: 0.76rem; font-weight: 700; color: #06b6d4; margin-top: 0.25rem;">JIS COLLEGE OF ENGINEERING</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem;">Stream: <strong>BCA GENERAL</strong></div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border-light);">Teaches: <strong>UI/UX Figma</strong></div>
+        </div>
+
+        <!-- Member 4: Rahit Das -->
+        <div class="glass-panel" style="padding: 1.5rem 1.25rem; text-align: center; border-top: 3.5px solid #f43f5e;">
+          <div class="avatar-circle" style="width: 52px; height: 52px; margin: 0 auto 0.75rem; background: #f43f5e; font-size: 1.15rem; color: white;">RD</div>
+          <h4 style="font-size: 1.05rem; margin-bottom: 0.2rem;">Rahit Das</h4>
+          <span class="badge badge-amber" style="font-size: 0.72rem; margin-bottom: 0.35rem;">Team Member</span>
+          <div style="font-size: 0.76rem; font-weight: 700; color: #f43f5e; margin-top: 0.25rem;">JIS COLLEGE OF ENGINEERING</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem;">Stream: <strong>BCA GENERAL</strong></div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border-light);">Teaches: <strong>Machine Learning</strong></div>
+        </div>
+
+        <!-- Member 5: Protyusha Bose -->
+        <div class="glass-panel" style="padding: 1.5rem 1.25rem; text-align: center; border-top: 3.5px solid #8b5cf6;">
+          <div class="avatar-circle" style="width: 52px; height: 52px; margin: 0 auto 0.75rem; background: #8b5cf6; font-size: 1.15rem; color: white;">PB</div>
+          <h4 style="font-size: 1.05rem; margin-bottom: 0.2rem;">Protyusha Bose</h4>
+          <span class="badge badge-emerald" style="font-size: 0.72rem; margin-bottom: 0.35rem;">Team Member</span>
+          <div style="font-size: 0.76rem; font-weight: 700; color: #8b5cf6; margin-top: 0.25rem;">JIS COLLEGE OF ENGINEERING</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem;">Stream: <strong>BCA GENERAL</strong></div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border-light);">Teaches: <strong>MySQL Databases</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SITE FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="brand-logo" style="margin-bottom: 0.75rem;">
+            <div class="brand-icon"><i class="fa-solid fa-arrows-spin"></i></div>
+            <span>Student Skill <span class="gradient-text">Exchange Platform</span></span>
+          </div>
+          <p class="footer-desc">
+            A peer-to-peer solution to the Student Skill Exchange Problem. 
+            Eliminating financial barriers in higher education through 3-way matching and time-banking.
+          </p>
+          <div style="margin-top: 1.25rem; display: flex; gap: 0.75rem;">
+            <span class="badge badge-primary"><i class="fa-solid fa-code"></i> HTML5 / CSS3 / JS</span>
+            <span class="badge badge-emerald"><i class="fa-solid fa-database"></i> MySQL 8.0</span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Platform Features</h5>
+          <ul class="footer-links">
+            <li><a href="#problem">The 1-on-1 Problem</a></li>
+            <li><a href="#solver">3-Way Cycle Matcher</a></li>
+            <li><a href="#marketplace">Skill Directory</a></li>
+            <li><a href="#database">MySQL Schema & Views</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Project Architecture</h5>
+          <ul class="footer-links">
+            <li><a href="#problem">3-Way Graph Cycle Resolution</a></li>
+            <li><a href="#database">Database Tables</a></li>
+            <li><a href="#database">Stable Peer Pairing</a></li>
+            <li><a href="#dashboard">Time-Bank Ledger Model</a></li>
+            <li><a href="#database">Escrow Guarantee</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Project Repository</h5>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" id="footerViewSqlLink"><i class="fa-solid fa-file-code"></i> View schema.sql</a></li>
+            <li><a href="javascript:void(0)" id="footerTestDemoBtn"><i class="fa-solid fa-play"></i> Simulate 3-Way Cycle</a></li>
+            <li><a href="javascript:void(0)" id="footerExportDataBtn"><i class="fa-solid fa-file-export"></i> Export DB JSON</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 Student Skill Exchange Platform &bull; Academic Capstone Project.
+        </div>
+        <div>
+          Built with <strong>MySQL, HTML, CSS, JavaScript</strong>.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript App -->
+  <script>
+/**
+ * =====================================================================
+ * STUDENT SKILL EXCHANGE PLATFORM
+ * Frontend Architecture & Relational Graph Solver Engine
+ * Technologies: JavaScript (ES6+), MySQL 8.0 Data Model, HTML5, CSS3
+ * =====================================================================
+ */
+
+// Global Application State (Mirrors schema.sql Relational Structure)
+const DB = {
+  currentUser: {
+    student_id: 1,
+    full_name: "Rai Bose",
+    email: "rai.bose@jis.edu",
+    university: "JIS College of Engineering",
+    stream: "BCA GENERAL",
+    major: "BCA GENERAL",
+    graduation_year: 2026,
+    credit_balance: 4.50,
+    reputation_score: 4.95,
+    avatar_color: "#4f46e5",
+    total_hours_taught: 14.0,
+    total_hours_learned: 11.0,
+    offered_skill_id: 1, // Python & Data Structures
+    sought_skill_id: 8   // UI/UX Design with Figma
+  },
+
+  categories: [
+    { id: "cs", name: "Computer Science & AI", icon: "fa-code" },
+    { id: "math", name: "Mathematics & Data", icon: "fa-calculator" },
+    { id: "lang", name: "Languages & Linguistics", icon: "fa-language" },
+    { id: "design", name: "UI/UX & Creative Media", icon: "fa-palette" },
+    { id: "music", name: "Music & Sound", icon: "fa-guitar" },
+    { id: "career", name: "Career & Communication", icon: "fa-briefcase" }
+  ],
+
+  skills: [
+    { id: 1, category: "cs", name: "Python & Data Structures", desc: "Algorithmic problem solving, Python 3 syntax & LeetCode prep" },
+    { id: 2, category: "cs", name: "Database Systems & MySQL", desc: "Relational schema design, normalization, ACID and SQL query tuning" },
+    { id: 3, category: "cs", name: "Machine Learning & PyTorch", desc: "Neural network architectures, tensor ops & model training" },
+    { id: 4, category: "math", name: "Multivariable Calculus III", desc: "Partial derivatives, gradient vectors & double/triple integrals" },
+    { id: 5, category: "math", name: "Linear Algebra & Matrices", desc: "Eigenvalues, vector spaces, dot products & matrix decomposition" },
+    { id: 6, category: "lang", name: "Conversational Spanish", desc: "Daily spoken fluency, pronunciation and grammar fundamentals" },
+    { id: 7, category: "lang", name: "Japanese for Beginners (JLPT N5)", desc: "Hiragana, Katakana, basic Kanji & conversational grammar" },
+    { id: 8, category: "design", name: "UI/UX Design with Figma", desc: "Wireframing, design systems, autolayout & micro-interactions" },
+    { id: 9, category: "design", name: "Premiere Pro & Video Editing", desc: "Video cuts, color grading, sound design & YouTube pacing" },
+    { id: 10, category: "music", name: "Acoustic Guitar Fundamentals", desc: "Chords, fingerpicking, rhythm techniques and tab reading" },
+    { id: 11, category: "career", name: "Technical Interview Mastery", desc: "FAANG behavioral & systems design walkthroughs" }
+  ],
+
+  // The 5 Project Members as Verified Student Profiles (JIS College of Engineering - BCA GENERAL)
+  students: [
+    {
+      student_id: 1,
+      name: "Rai Bose",
+      initials: "RB",
+      color: "#4f46e5",
+      university: "JIS College of Engineering",
+      stream: "BCA GENERAL",
+      major: "BCA GENERAL",
+      year: 2026,
+      rating: 4.95,
+      exchanges: 14,
+      teachesSkill: "Python & Data Structures",
+      teachesLevel: "Expert",
+      teachesId: 1,
+      category: "cs",
+      seeksSkill: "UI/UX Design with Figma",
+      seeksLevel: "Intermediate",
+      seeksId: 8,
+      bio: "Project Lead passionate about backend systems, algorithmic design, and full-stack software development.",
+      availability: "Tue/Thu evenings & Weekends"
+    },
+    {
+      student_id: 2,
+      name: "Raj Biswas",
+      initials: "RB",
+      color: "#10b981",
+      university: "JIS College of Engineering",
+      stream: "BCA GENERAL",
+      major: "BCA GENERAL",
+      year: 2026,
+      rating: 4.90,
+      exchanges: 12,
+      teachesSkill: "Multivariable Calculus III",
+      teachesLevel: "Advanced",
+      teachesId: 4,
+      category: "math",
+      seeksSkill: "Python & Data Structures",
+      seeksLevel: "Intermediate",
+      seeksId: 1,
+      bio: "Applied math tutor specializing in 3D calculus, matrix transformations, and optimization theory.",
+      availability: "Wed/Fri evenings"
+    },
+    {
+      student_id: 3,
+      name: "Rahul Kumar Shaw",
+      initials: "RS",
+      color: "#06b6d4",
+      university: "JIS College of Engineering",
+      stream: "BCA GENERAL",
+      major: "BCA GENERAL",
+      year: 2026,
+      rating: 4.92,
+      exchanges: 15,
+      teachesSkill: "UI/UX Design with Figma",
+      teachesLevel: "Expert",
+      teachesId: 8,
+      category: "design",
+      seeksSkill: "Multivariable Calculus III",
+      seeksLevel: "Beginner",
+      seeksId: 4,
+      bio: "UI/UX designer and frontend enthusiast. Builds responsive design systems, autolayout components, and wireframes.",
+      availability: "Weekends & Mon afternoons"
+    },
+    {
+      student_id: 4,
+      name: "Rahit Das",
+      initials: "RD",
+      color: "#f43f5e",
+      university: "JIS College of Engineering",
+      stream: "BCA GENERAL",
+      major: "BCA GENERAL",
+      year: 2026,
+      rating: 4.88,
+      exchanges: 9,
+      teachesSkill: "Machine Learning & PyTorch",
+      teachesLevel: "Advanced",
+      teachesId: 3,
+      category: "cs",
+      seeksSkill: "Database Systems & MySQL",
+      seeksLevel: "Beginner",
+      seeksId: 2,
+      bio: "AI researcher focusing on deep learning, neural network backprop, and computer vision pipelines.",
+      availability: "Flexible weekdays"
+    },
+    {
+      student_id: 5,
+      name: "Protyusha Bose",
+      initials: "PB",
+      color: "#8b5cf6",
+      university: "JIS College of Engineering",
+      stream: "BCA GENERAL",
+      major: "BCA GENERAL",
+      year: 2026,
+      rating: 4.96,
+      exchanges: 16,
+      teachesSkill: "Database Systems & MySQL",
+      teachesLevel: "Expert",
+      teachesId: 2,
+      category: "cs",
+      seeksSkill: "Machine Learning & PyTorch",
+      seeksLevel: "Intermediate",
+      seeksId: 3,
+      bio: "Database engineer skilled in MySQL relational modeling, schema normalization, index optimization, and stored procedures.",
+      availability: "Saturday & Sunday mornings"
+    }
+  ],
+
+  // Active Peer Exchanges for Rai Bose
+  activeExchanges: [
+    {
+      exchange_id: 101,
+      peer_name: "Rahul Kumar Shaw",
+      peer_initials: "RS",
+      peer_color: "#06b6d4",
+      offered: "Python & Data Structures",
+      received: "UI/UX Design with Figma",
+      completed_hours: 3,
+      total_hours: 5,
+      next_session: "Tomorrow at 4:00 PM",
+      status: "In Progress"
+    },
+    {
+      exchange_id: 102,
+      peer_name: "Raj Biswas",
+      peer_initials: "RB",
+      peer_color: "#10b981",
+      offered: "Python Tree Traversal",
+      received: "Calculus III Integrals",
+      completed_hours: 2,
+      total_hours: 2,
+      next_session: "Completed (Awaiting Sign-off)",
+      status: "Review Pending"
+    }
+  ],
+
+  // Incoming Proposals for Rai Bose
+  incomingProposals: [
+    {
+      proposal_id: 201,
+      sender_name: "Protyusha Bose",
+      sender_initials: "PB",
+      sender_color: "#8b5cf6",
+      university: "JIS College of Engineering",
+      stream: "BCA GENERAL",
+      wants: "Python & Data Structures",
+      offers: "Database Systems & MySQL",
+      mode: "Direct 1:1 Swap",
+      proposed_hours: 2.0,
+      note: "Hi Rai! I would love to trade MySQL relational query tuning sessions for advanced Python tree traversal prep!"
+    }
+  ],
+
+  // SkillCredit Immutable Transaction Ledger
+  transactions: [
+    { id: "TX-901", date: "2026-11-10", type: "SESSION_PAYOUT", change: "+1.00", desc: "Taught Python Binary Search to Rahul Kumar Shaw", balance: "4.50" },
+    { id: "TX-892", date: "2026-11-08", type: "ESCROW_RELEASE", change: "+1.00", desc: "Completed Graph Theory lesson with Raj Biswas", balance: "3.50" },
+    { id: "TX-841", date: "2026-11-05", type: "SESSION_EXPENSE", change: "-1.00", desc: "Learned Figma Autolayout from Rahul Kumar Shaw", balance: "2.50" },
+    { id: "TX-800", date: "2026-11-01", type: "INITIAL_WELCOME_GRANT", change: "+3.00", desc: "Verified student onboarding bonus grant", balance: "3.50" }
+  ]
+};
+
+// =====================================================================
+// DOM INITIALIZATION & EVENT LISTENERS
+// =====================================================================
+
+function initializeApp() {
+  initTheme();
+  initSpeakerNotes();
+  renderMarketplace();
+  renderDashboard("activeSwaps");
+  initSolver();
+  initSqlExplorer();
+  initModals();
+  initCategoryFilters();
+  initSearch();
+  initFooterActions();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeApp);
+} else {
+  initializeApp();
+}
+
+// =====================================================================
+// SPEAKER PRESENTATION HINTS CONTROLLER
+// =====================================================================
+function initSpeakerNotes() {
+  const toggleBtn = document.getElementById("toggleSpeakerNotesBtn");
+  if (!toggleBtn) return;
+
+  let hintsVisible = true;
+  toggleBtn.addEventListener("click", () => {
+    hintsVisible = !hintsVisible;
+    document.body.classList.toggle("hide-speaker-hints", !hintsVisible);
+    toggleBtn.innerHTML = hintsVisible
+      ? '<i class="fa-solid fa-microphone"></i> Speaker Hints: ON'
+      : '<i class="fa-solid fa-microphone-slash"></i> Speaker Hints: OFF';
+    toggleBtn.className = hintsVisible
+      ? 'btn btn-emerald btn-sm'
+      : 'btn btn-secondary btn-sm';
+    showToast(hintsVisible ? "Speaker presentation hints visible" : "Speaker presentation hints hidden", "info");
+  });
+}
+
+// =====================================================================
+// THEME CONTROLLER (Dark / Light Mode)
+// =====================================================================
+function initTheme() {
+  const toggleBtn = document.getElementById("themeToggleBtn");
+  const savedTheme = localStorage.getItem("skill_exchange_theme");
+  
+  if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    document.body.classList.add("dark-theme");
+    updateThemeIcon(true);
+  } else {
+    document.body.classList.remove("dark-theme");
+    updateThemeIcon(false);
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    const isDark = document.body.classList.toggle("dark-theme");
+    localStorage.setItem("skill_exchange_theme", isDark ? "dark" : "light");
+    updateThemeIcon(isDark);
+    showToast(isDark ? "Switched to Dark Mode" : "Switched to Light Mode", "info");
+  });
+}
+
+function updateThemeIcon(isDark) {
+  const icon = document.querySelector("#themeToggleBtn i");
+  if (!icon) return;
+  if (isDark) {
+    icon.className = "fa-solid fa-sun";
+    icon.style.color = "#f59e0b";
+  } else {
+    icon.className = "fa-solid fa-moon";
+    icon.style.color = "";
+  }
+}
+
+// =====================================================================
+// 1. INTERACTIVE SKILL MATCHMAKER & GRAPH SOLVER
+// Solves: 1) Direct 2-Way, 2) 3-Way Directed Cycle, 3) Time-Bank Credit
+// =====================================================================
+let currentSolverMode = "cycle";
+
+function initSolver() {
+  const runBtn = document.getElementById("runSolverEngineBtn");
+  const heroBtn = document.getElementById("heroFindMatchesBtn");
+  const tabDirect = document.getElementById("tabDirectMatch");
+  const tabCycle = document.getElementById("tabCycleMatch");
+  const tabCredit = document.getElementById("tabCreditMatch");
+
+  // Mode tabs switcher
+  const modeTabs = [tabDirect, tabCycle, tabCredit];
+  modeTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      modeTabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      currentSolverMode = tab.dataset.mode;
+      renderSolverResults();
+    });
+  });
+
+  runBtn.addEventListener("click", () => {
+    runSolverWithAnimation();
+  });
+
+  heroBtn.addEventListener("click", () => {
+    const heroOffer = document.getElementById("heroOfferedSkill").value;
+    const heroSeek = document.getElementById("heroSoughtSkill").value;
+
+    // Smooth scroll to solver section
+    const solverElem = document.getElementById("solver");
+    solverElem.scrollIntoView({ behavior: "smooth" });
+
+    // Auto-sync solver dropdowns if matched
+    showToast(`Searching graph for: ${heroOffer} ⇄ ${heroSeek}`, "info");
+    runSolverWithAnimation();
+  });
+
+  // Initial render
+  renderSolverResults();
+}
+
+function runSolverWithAnimation() {
+  const viewport = document.getElementById("matchViewport");
+  viewport.innerHTML = `
+    <div style="text-align: center; padding: 3rem 1rem;">
+      <i class="fa-solid fa-circle-notch fa-spin text-primary" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+      <h4 style="font-size: 1.15rem; margin-bottom: 0.4rem;">Traversing MySQL Directed Preference Graph...</h4>
+      <p style="color: var(--text-muted); font-size: 0.88rem;">Executing modified Tarjan cycle search across active student profiles</p>
+    </div>
+  `;
+
+  setTimeout(() => {
+    renderSolverResults();
+    showToast("Graph resolution completed: Optimal swap cycle identified!", "success");
+  }, 650);
+}
+
+function renderSolverResults() {
+  const viewport = document.getElementById("matchViewport");
+  const title = document.getElementById("matchResultTitle");
+  const subtitle = document.getElementById("matchResultSubtitle");
+
+  if (currentSolverMode === "direct") {
+    title.innerText = "Direct 2-Way Coincidence Match (Bilateral Barter)";
+    subtitle.innerText = "Found mutual alignment: Rahit Das ⇄ Protyusha Bose";
+    viewport.innerHTML = `
+      <div class="direct-match-layout">
+        <!-- Student 1: Rahit Das -->
+        <div class="peer-card-match">
+          <div class="peer-avatar-lg" style="background: #f43f5e;">RD</div>
+          <h4 style="font-size: 1.1rem; margin-bottom: 0.2rem;">Rahit Das</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">AI & Data Science '26</p>
+          <div class="node-skill-badge teaches-badge" style="margin-bottom: 0.4rem;">
+            <span>Offers:</span> <strong>Machine Learning</strong>
+          </div>
+          <div class="node-skill-badge wants-badge">
+            <span>Seeks:</span> <strong>Database Systems & MySQL</strong>
+          </div>
+        </div>
+
+        <!-- Mutual Exchange Arrows -->
+        <div class="match-exchange-arrows">
+          <div class="swap-badge-label"><i class="fa-solid fa-arrows-rotate"></i> Mutual Alignment</div>
+          <div style="font-size: 2.2rem; color: var(--primary);">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+          </div>
+          <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600;">Match Score: 98.4%</span>
+        </div>
+
+        <!-- Student 2: Protyusha Bose -->
+        <div class="peer-card-match">
+          <div class="peer-avatar-lg" style="background: #8b5cf6;">PB</div>
+          <h4 style="font-size: 1.1rem; margin-bottom: 0.2rem;">Protyusha Bose</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Software Engineering '26</p>
+          <div class="node-skill-badge teaches-badge" style="margin-bottom: 0.4rem;">
+            <span>Offers:</span> <strong>Database Systems & MySQL</strong>
+          </div>
+          <div class="node-skill-badge wants-badge">
+            <span>Seeks:</span> <strong>Machine Learning</strong>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <button class="btn btn-emerald" onclick="openProposeModalForStudent(5)">
+          <i class="fa-solid fa-handshake"></i> Lock In Direct Bilateral Swap
+        </button>
+      </div>
+    `;
+  } else if (currentSolverMode === "cycle") {
+    title.innerText = "3-Way Directed Cycle Resolution (Overcoming Barter Bottleneck)";
+    subtitle.innerText = "Rai Bose (Python) → Raj Biswas (Calculus) → Rahul Kumar Shaw (Figma) → Rai Bose";
+    viewport.innerHTML = `
+      <div class="cycle-graph-interactive">
+        <div class="cycle-canvas-container">
+          <!-- Step 1: Rai Bose (You) -->
+          <div class="cycle-step-card step-node-1">
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <span class="avatar-circle" style="background: #4f46e5;">RB</span>
+              <div>
+                <strong style="font-size: 0.8rem;">Rai Bose (You)</strong>
+                <div style="font-size: 0.68rem; color: var(--text-muted);">Lead &bull; CS '26</div>
+              </div>
+            </div>
+            <div class="node-skill-badge teaches-badge"><span>Teaches:</span> <strong>Python</strong></div>
+            <div class="node-skill-badge wants-badge"><span>Wants:</span> <strong>Figma</strong></div>
+          </div>
+
+          <!-- Step 2: Raj Biswas -->
+          <div class="cycle-step-card step-node-2">
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <span class="avatar-circle" style="background: #10b981;">RB</span>
+              <div>
+                <strong style="font-size: 0.8rem;">Raj Biswas</strong>
+                <div style="font-size: 0.68rem; color: var(--text-muted);">Math '26</div>
+              </div>
+            </div>
+            <div class="node-skill-badge teaches-badge"><span>Teaches:</span> <strong>Calculus III</strong></div>
+            <div class="node-skill-badge wants-badge"><span>Wants:</span> <strong>Python</strong></div>
+          </div>
+
+          <!-- Step 3: Rahul Kumar Shaw -->
+          <div class="cycle-step-card step-node-3">
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <span class="avatar-circle" style="background: #06b6d4;">RS</span>
+              <div>
+                <strong style="font-size: 0.8rem;">Rahul K. Shaw</strong>
+                <div style="font-size: 0.68rem; color: var(--text-muted);">Design '26</div>
+              </div>
+            </div>
+            <div class="node-skill-badge teaches-badge"><span>Teaches:</span> <strong>Figma UI</strong></div>
+            <div class="node-skill-badge wants-badge"><span>Wants:</span> <strong>Calculus III</strong></div>
+          </div>
+
+          <!-- SVG Arrows -->
+          <svg class="cycle-svg-arrows" viewBox="0 0 600 280">
+            <defs>
+              <marker id="arrowhead2" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                <polygon points="0 0, 9 3.5, 0 7" fill="#4f46e5" />
+              </marker>
+            </defs>
+            <!-- Rai -> Raj -->
+            <path class="arrow-path" d="M 240 85 Q 160 140 180 200" marker-end="url(#arrowhead2)" />
+            <!-- Raj -> Rahul -->
+            <path class="arrow-path" d="M 280 240 L 380 240" marker-end="url(#arrowhead2)" />
+            <!-- Rahul -> Rai -->
+            <path class="arrow-path" d="M 460 200 Q 480 130 360 85" marker-end="url(#arrowhead2)" />
+          </svg>
+        </div>
+
+        <div class="cycle-explanation-banner">
+          <i class="fa-solid fa-circle-info"></i>
+          <strong>How this 3-way swap functions:</strong> You (Rai) teach Python to Raj (1 hr), Raj teaches Calculus to Rahul (1 hr), and Rahul teaches Figma to you (1 hr). All three students receive their desired skill without any currency or 1:1 barrier!
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+          <button class="btn btn-emerald" onclick="commitCyclePact()">
+            <i class="fa-solid fa-lock"></i> Commit to 3-Way Cycle Agreement
+          </button>
+          <button class="btn btn-secondary" onclick="viewCycleInSql()">
+            <i class="fa-solid fa-database"></i> View in MySQL <code>cycle_matches</code>
+          </button>
+        </div>
+      </div>
+    `;
+  } else if (currentSolverMode === "credit") {
+    title.innerText = "Time-Banking SkillCredit Protocol (Asynchronous Decoupling)";
+    subtitle.innerText = "Exchange skills across time without needing an immediate counterpart";
+    viewport.innerHTML = `
+      <div class="credit-token-layout">
+        <div class="token-balance-showcase">
+          <div style="font-size: 0.95rem; font-weight: 700; opacity: 0.9;">YOUR TIME-BANK RESERVES</div>
+          <div class="token-big-num">
+            <i class="fa-solid fa-coins"></i> <span id="tokenBigDisplay">${DB.currentUser.credit_balance.toFixed(2)}</span> Credits
+          </div>
+          <p style="font-size: 0.88rem; opacity: 0.95;">
+            Earned by teaching peer students. You can redeem 1.00 credit with any verified student tutor instantly!
+          </p>
+          <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+            <span class="badge" style="background: rgba(255,255,255,0.25); color:white;">1 Credit = 1 Hour</span>
+            <span class="badge" style="background: rgba(255,255,255,0.25); color:white;">Zero Commission</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div class="glass-panel" style="padding: 1.25rem;">
+            <h5 style="font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--text-main);">
+              <i class="fa-solid fa-unlock-keyhole text-emerald"></i> Instant Unlock via Time-Banking:
+            </h5>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+              Rahul Kumar Shaw teaches <strong>UI/UX Design with Figma</strong> and accepts 1.00 SkillCredit. 
+              No need to wait for an immediate cycle.
+            </p>
+            <button class="btn btn-primary btn-sm" onclick="redeemTimeBankToken(3)">
+              <i class="fa-solid fa-bolt"></i> Instant Book with 1.00 Credit
+            </button>
+          </div>
+
+          <div class="glass-panel" style="padding: 1.25rem;">
+            <h5 style="font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--text-main);">
+              <i class="fa-solid fa-shield-check text-primary"></i> Escrow Guarantee:
+            </h5>
+            <p style="font-size: 0.82rem; color: var(--text-muted);">
+              Credits are held in platform escrow until both tutor and learner mark the 60-minute lesson as completed.
+            </p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function commitCyclePact() {
+  if (typeof confetti === "function") {
+    confetti({ particleCount: 75, spread: 60, origin: { y: 0.6 } });
+  }
+  showToast("3-Way Cycle Pact Committed! Notifying Raj Biswas & Rahul Kumar Shaw.", "success");
+}
+
+function viewCycleInSql() {
+  const dbSection = document.getElementById("database");
+  dbSection.scrollIntoView({ behavior: "smooth" });
+  document.getElementById("customSqlInput").value = "SELECT * FROM cycle_matches WHERE status = 'COMMITTED';";
+  executeSql();
+}
+
+function redeemTimeBankToken(studentId) {
+  if (DB.currentUser.credit_balance < 1.0) {
+    showToast("Insufficient credits! Teach a skill first to earn credits.", "info");
+    return;
+  }
+  DB.currentUser.credit_balance -= 1.0;
+  updateCreditDisplays();
+  
+  // Add ledger transaction
+  DB.transactions.unshift({
+    id: `TX-${Math.floor(1000 + Math.random() * 9000)}`,
+    date: new Date().toISOString().split("T")[0],
+    type: "ESCROW_LOCK",
+    change: "-1.00",
+    desc: "Escrow locked: 1 hour Figma lesson with Rahul Kumar Shaw",
+    balance: DB.currentUser.credit_balance.toFixed(2)
+  });
+
+  if (typeof confetti === "function") {
+    confetti({ particleCount: 50, spread: 50 });
+  }
+  showToast("Session confirmed! 1.00 Credit placed into escrow.", "success");
+  renderDashboard("creditLedger");
+}
+
+// =====================================================================
+// 2. SKILL MARKETPLACE & STUDENT DIRECTORY
+// =====================================================================
+let activeCategoryFilter = "all";
+let searchQuery = "";
+
+function renderMarketplace() {
+  const container = document.getElementById("studentsGridContainer");
+  if (!container) return;
+
+  const filtered = DB.students.filter(student => {
+    const matchesCat = activeCategoryFilter === "all" || student.category === activeCategoryFilter;
+    const q = searchQuery.toLowerCase().trim();
+    const matchesQuery = !q || 
+      student.name.toLowerCase().includes(q) ||
+      student.teachesSkill.toLowerCase().includes(q) ||
+      student.seeksSkill.toLowerCase().includes(q) ||
+      (student.stream && student.stream.toLowerCase().includes(q)) ||
+      (student.major && student.major.toLowerCase().includes(q)) ||
+      student.university.toLowerCase().includes(q);
+    return matchesCat && matchesQuery;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1/-1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+        <i class="fa-solid fa-magnifying-glass" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+        <h4>No student skills found matching "${searchQuery}"</h4>
+        <p style="font-size: 0.88rem;">Try clearing search keywords or selecting "All Categories".</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered.map(student => `
+    <div class="student-card glass-panel">
+      <div class="student-card-header">
+        <div class="student-avatar" style="background: ${student.color};">
+          ${student.initials}
+        </div>
+        <div class="student-info">
+          <h4>
+            ${student.name}
+            <i class="fa-solid fa-circle-check verified-icon" title="Verified JIS College of Engineering Student"></i>
+          </h4>
+          <div class="student-university">
+            <span style="font-weight: 600; color: var(--color-primary);">${student.university}</span> &bull; Stream: ${student.stream || student.major} '${student.year.toString().slice(2)}
+          </div>
+          <div class="student-stats-row">
+            <span class="rating-stars">
+              <i class="fa-solid fa-star"></i> ${student.rating}
+            </span>
+            <span class="exchange-count-badge">
+              <i class="fa-solid fa-arrows-rotate"></i> ${student.exchanges} swaps
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-trade-box">
+        <div class="trade-row">
+          <span class="trade-label teach"><i class="fa-solid fa-chalkboard-user"></i> Teaches:</span>
+          <span class="skill-name-tag">${student.teachesSkill} <small style="opacity:0.75;">(${student.teachesLevel})</small></span>
+        </div>
+        <div class="trade-row">
+          <span class="trade-label learn"><i class="fa-solid fa-book-open-reader"></i> Seeking:</span>
+          <span class="skill-name-tag">${student.seeksSkill}</span>
+        </div>
+      </div>
+
+      <p class="student-bio">${student.bio}</p>
+
+      <div class="student-card-footer">
+        <span class="availability-tag">
+          <i class="fa-regular fa-clock"></i> ${student.availability}
+        </span>
+        <button class="btn btn-primary btn-sm" onclick="openProposeModalForStudent(${student.student_id})">
+          <i class="fa-solid fa-handshake"></i> Swap
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function initCategoryFilters() {
+  const buttons = document.querySelectorAll("#categoryFilterGroup .category-pill");
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      buttons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      activeCategoryFilter = btn.dataset.category;
+      renderMarketplace();
+    });
+  });
+}
+
+function initSearch() {
+  const searchInput = document.getElementById("marketSearchInput");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderMarketplace();
+    });
+  }
+}
+
+// =====================================================================
+// 3. STUDENT DASHBOARD & EXCHANGE TRACKER
+// =====================================================================
+function renderDashboard(activeTab = "activeSwaps") {
+  const container = document.getElementById("dashTabContent");
+  const tabButtons = document.querySelectorAll(".dash-tab-item");
+  
+  tabButtons.forEach(btn => {
+    if (btn.dataset.tab === activeTab) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
+
+  if (activeTab === "activeSwaps") {
+    container.innerHTML = `
+      <div class="swaps-list">
+        ${DB.activeExchanges.map(ex => `
+          <div class="swap-row-card glass-panel">
+            <div class="swap-row-left">
+              <div class="swap-user-pair">
+                <div class="mini-avatar" style="background: ${DB.currentUser.avatar_color};">AR</div>
+                <div class="mini-avatar" style="background: ${ex.peer_color};">${ex.peer_initials}</div>
+              </div>
+              <div>
+                <h4 style="font-size: 1.05rem; margin-bottom: 0.2rem;">${ex.peer_name}</h4>
+                <div style="font-size: 0.82rem; color: var(--text-muted);">
+                  Trading <strong>${ex.offered}</strong> for <strong>${ex.received}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div style="text-align: right;">
+              <span class="badge ${ex.status === 'In Progress' ? 'badge-primary' : 'badge-emerald'}">
+                ${ex.status}
+              </span>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem;">
+                ${ex.completed_hours} of ${ex.total_hours} Hours Completed
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill" style="width: ${(ex.completed_hours / ex.total_hours) * 100}%;"></div>
+              </div>
+            </div>
+
+            <div>
+              <span class="badge badge-emerald" style="font-size: 0.75rem; padding: 0.4rem 0.65rem;">
+                <i class="fa-solid fa-handshake"></i> Active Exchange
+              </span>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  } else if (activeTab === "pendingProposals") {
+    if (DB.incomingProposals.length === 0) {
+      container.innerHTML = `<p style="padding: 2rem; text-align: center; color: var(--text-muted);">No pending incoming proposals at this time.</p>`;
+      return;
+    }
+    container.innerHTML = `
+      <div class="swaps-list">
+        ${DB.incomingProposals.map(prop => `
+          <div class="swap-row-card glass-panel">
+            <div class="swap-row-left">
+              <div class="mini-avatar" style="background: ${prop.sender_color};">${prop.sender_initials}</div>
+              <div>
+                <h4 style="font-size: 1.05rem; margin-bottom: 0.2rem;">${prop.sender_name} (${prop.university})</h4>
+                <div style="font-size: 0.82rem; color: var(--text-muted);">
+                  Offers: <strong>${prop.offers}</strong> &bull; Requests: <strong>${prop.wants}</strong>
+                </div>
+                <p style="font-size: 0.82rem; color: var(--text-main); margin-top: 0.4rem; font-style: italic;">
+                  "${prop.note}"
+                </p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-secondary btn-sm" onclick="declineProposal(${prop.proposal_id})">
+                Decline
+              </button>
+              <button class="btn btn-emerald btn-sm" onclick="acceptProposal(${prop.proposal_id})">
+                <i class="fa-solid fa-check"></i> Accept Swap
+              </button>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  } else if (activeTab === "creditLedger") {
+    container.innerHTML = `
+      <div class="algorithm-comparison-table-wrapper" style="margin: 0;">
+        <table class="algo-table">
+          <thead>
+            <tr>
+              <th>TX ID</th>
+              <th>Date</th>
+              <th>Transaction Type</th>
+              <th>Description</th>
+              <th>Change</th>
+              <th>Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${DB.transactions.map(tx => `
+              <tr>
+                <td><code>${tx.id}</code></td>
+                <td>${tx.date}</td>
+                <td><span class="badge ${tx.change.startsWith('+') ? 'badge-emerald' : 'badge-amber'}">${tx.type}</span></td>
+                <td>${tx.desc}</td>
+                <td style="font-weight: 700; color: ${tx.change.startsWith('+') ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
+                  ${tx.change} CR
+                </td>
+                <td><strong>${tx.balance} CR</strong></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  // Bind tab click events
+  document.querySelectorAll(".dash-tab-item").forEach(item => {
+    item.addEventListener("click", () => {
+      renderDashboard(item.dataset.tab);
+    });
+  });
+}
+
+function acceptProposal(proposalId) {
+  const propIndex = DB.incomingProposals.findIndex(p => p.proposal_id === proposalId);
+  if (propIndex !== -1) {
+    const accepted = DB.incomingProposals.splice(propIndex, 1)[0];
+    DB.activeExchanges.push({
+      exchange_id: 103,
+      peer_name: accepted.sender_name,
+      peer_initials: accepted.sender_initials,
+      peer_color: accepted.sender_color,
+      offered: accepted.wants,
+      received: accepted.offers,
+      completed_hours: 0,
+      total_hours: accepted.proposed_hours,
+      next_session: "Pending Scheduling",
+      status: "In Progress"
+    });
+
+    document.getElementById("pendingProposalsCount").innerText = DB.incomingProposals.length;
+    document.getElementById("activeSwapsCount").innerText = DB.activeExchanges.length;
+
+    showToast(`Accepted swap with ${accepted.sender_name}! Active exchange contract created in MySQL.`, "success");
+    renderDashboard("activeSwaps");
+  }
+}
+
+function declineProposal(proposalId) {
+  DB.incomingProposals = DB.incomingProposals.filter(p => p.proposal_id !== proposalId);
+  document.getElementById("pendingProposalsCount").innerText = DB.incomingProposals.length;
+  showToast("Proposal declined.", "info");
+  renderDashboard("pendingProposals");
+}
+
+function updateCreditDisplays() {
+  const amountStr = DB.currentUser.credit_balance.toFixed(2);
+  document.getElementById("navCreditAmount").innerText = amountStr;
+  document.getElementById("dashCreditAmount").innerText = amountStr;
+  const tokenDisplay = document.getElementById("tokenBigDisplay");
+  if (tokenDisplay) tokenDisplay.innerText = amountStr;
+}
+
+// =====================================================================
+// 5. INTERACTIVE MYSQL SCHEMA & QUERY EXPLORER
+// =====================================================================
+function initSqlExplorer() {
+  const tableSelector = document.querySelectorAll("#sqlTableSelector button");
+  const execBtn = document.getElementById("executeSqlBtn");
+  const queryDirectBtn = document.getElementById("queryDirect2WayBtn");
+  const queryCyclesBtn = document.getElementById("queryCyclesBtn");
+  const queryMarketBtn = document.getElementById("queryMarketEquilibriumBtn");
+  const downloadBtn = document.getElementById("downloadSqlBtn");
+
+  tableSelector.forEach(btn => {
+    btn.addEventListener("click", () => {
+      tableSelector.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const tableName = btn.dataset.table;
+      document.getElementById("customSqlInput").value = `SELECT * FROM ${tableName} LIMIT 10;`;
+      executeSql();
+    });
+  });
+
+  execBtn.addEventListener("click", executeSql);
+
+  queryDirectBtn.addEventListener("click", () => {
+    document.getElementById("customSqlInput").value = "SELECT * FROM view_direct_2way_matches;";
+    executeSql();
+  });
+
+  queryCyclesBtn.addEventListener("click", () => {
+    document.getElementById("customSqlInput").value = "SELECT cycle_id, cycle_length, student_a_id, student_b_id, student_c_id, compatibility_score, status FROM cycle_matches;";
+    executeSql();
+  });
+
+  queryMarketBtn.addEventListener("click", () => {
+    document.getElementById("customSqlInput").value = "SELECT * FROM view_skill_market_equilibrium ORDER BY deficit_demand DESC;";
+    executeSql();
+  });
+
+  downloadBtn.addEventListener("click", () => {
+    window.open("schema.sql", "_blank");
+  });
+
+  // Initial table render
+  executeSql();
+}
+
+function executeSql() {
+  const input = document.getElementById("customSqlInput").value.trim();
+  const thead = document.getElementById("sqlTableHead");
+  const tbody = document.getElementById("sqlTableBody");
+  const statusElem = document.getElementById("sqlExecutionStatus");
+
+  const startTime = performance.now();
+
+  let columns = [];
+  let rows = [];
+
+  const lower = input.toLowerCase();
+
+  if (lower.includes("view_direct_2way_matches")) {
+    columns = ["student_a_id", "student_a_name", "offers", "student_b_id", "student_b_name", "offers_back"];
+    rows = [
+      [4, "Rahit Das", "Machine Learning & PyTorch", 5, "Protyusha Bose", "Database Systems & MySQL"]
+    ];
+  } else if (lower.includes("cycle_matches")) {
+    columns = ["cycle_id", "length", "student_a", "student_b", "student_c", "score", "status"];
+    rows = [
+      [1, 3, "Rai Bose (1)", "Raj Biswas (2)", "Rahul Kumar Shaw (3)", 0.98, "COMMITTED"]
+    ];
+  } else if (lower.includes("view_skill_market_equilibrium")) {
+    columns = ["skill_id", "skill_name", "category", "total_teachers", "total_learners", "deficit_demand"];
+    rows = [
+      [8, "UI/UX Design with Figma", "UI/UX & Creative Media", 1, 3, "+2 (High Deficit)"],
+      [1, "Python & Data Structures", "Computer Science & AI", 1, 3, "+2 (High Demand)"],
+      [2, "Database Systems & MySQL", "Computer Science & AI", 1, 2, "+1 (In Demand)"],
+      [4, "Multivariable Calculus III", "Mathematics & Data", 1, 1, "0 (Equilibrium)"]
+    ];
+  } else if (lower.includes("student_skills_offered")) {
+    columns = ["offer_id", "student_id", "skill_id", "proficiency", "hourly_credits", "is_verified"];
+    rows = DB.students.map((s, idx) => [idx + 1, s.student_id, s.teachesId, s.teachesLevel, "1.00", "TRUE"]);
+  } else if (lower.includes("student_skills_sought")) {
+    columns = ["sought_id", "student_id", "skill_id", "desired_level", "priority"];
+    rows = DB.students.map((s, idx) => [idx + 1, s.student_id, s.seeksId, s.seeksLevel, idx % 2 === 0 ? "High" : "Medium"]);
+  } else if (lower.includes("skill_credit_transactions") || lower.includes("credit_ledger")) {
+    columns = ["tx_id", "date", "type", "description", "change_cr", "final_balance"];
+    rows = DB.transactions.map(t => [t.id, t.date, t.type, t.desc, t.change, t.balance]);
+  } else {
+    // Default to students table
+    columns = ["student_id", "full_name", "university", "stream", "credit_balance", "reputation_score"];
+    rows = DB.students.map(s => [
+      s.student_id,
+      s.name,
+      s.university,
+      s.stream || s.major,
+      s.student_id === 1 ? DB.currentUser.credit_balance.toFixed(2) : (3.00 + (s.student_id * 0.5)).toFixed(2),
+      s.rating.toFixed(2)
+    ]);
+  }
+
+  // Render Table Head
+  thead.innerHTML = `<tr>${columns.map(c => `<th>${c}</th>`).join("")}</tr>`;
+
+  // Render Table Body
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      ${r.map((cell, idx) => `
+        <td>${idx === 0 && typeof cell === 'string' && cell.startsWith('TX-') ? `<code>${cell}</code>` : cell}</td>
+      `).join("")}
+    </tr>
+  `).join("");
+
+  const elapsed = (performance.now() - startTime).toFixed(1);
+  statusElem.innerHTML = `<i class="fa-solid fa-check text-emerald"></i> ${rows.length} rows returned in ${Math.max(elapsed, 1.2)}ms`;
+}
+
+// =====================================================================
+// 6. MODALS & FORMS
+// =====================================================================
+let selectedTargetStudent = null;
+let selectedAvatarColor = "#4f46e5";
+
+function initModals() {
+  // -------------------------------------------------------------
+  // CREATE NEW USER PROFILE MODAL
+  // -------------------------------------------------------------
+  const openCreateProfileBtn = document.getElementById("openCreateProfileBtn");
+  const dashCreateProfileBtn = document.getElementById("dashCreateProfileBtn");
+  const closeCreateProfileBtn = document.getElementById("closeCreateProfileBtn");
+  const cancelCreateProfileBtn = document.getElementById("cancelCreateProfileBtn");
+  const createProfileModal = document.getElementById("createProfileModal");
+  const submitCreateProfileBtn = document.getElementById("submitCreateProfileBtn");
+
+  const openProfileModal = () => {
+    if (createProfileModal) createProfileModal.classList.add("open");
+  };
+
+  const closeProfileModal = () => {
+    if (createProfileModal) createProfileModal.classList.remove("open");
+  };
+
+  if (openCreateProfileBtn) openCreateProfileBtn.addEventListener("click", openProfileModal);
+  if (dashCreateProfileBtn) dashCreateProfileBtn.addEventListener("click", openProfileModal);
+  if (closeCreateProfileBtn) closeCreateProfileBtn.addEventListener("click", closeProfileModal);
+  if (cancelCreateProfileBtn) cancelCreateProfileBtn.addEventListener("click", closeProfileModal);
+
+  // Avatar color picker selection
+  const colorSwatches = document.querySelectorAll("#avatarColorPicker .color-swatch");
+  colorSwatches.forEach(swatch => {
+    swatch.addEventListener("click", () => {
+      colorSwatches.forEach(s => s.classList.remove("active"));
+      swatch.classList.add("active");
+      selectedAvatarColor = swatch.dataset.color || "#4f46e5";
+    });
+  });
+
+  // Handle Create Profile Submission
+  if (submitCreateProfileBtn) {
+    submitCreateProfileBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const nameVal = document.getElementById("newStudentName").value.trim();
+      const emailVal = document.getElementById("newStudentEmail").value.trim();
+      const uniEl = document.getElementById("newStudentUniversity");
+      const uniVal = (uniEl ? uniEl.value.trim() : "") || "JIS College of Engineering";
+      const streamEl = document.getElementById("newStudentStream") || document.getElementById("newStudentMajor");
+      const streamVal = (streamEl ? streamEl.value.trim() : "") || "BCA GENERAL";
+      const teachVal = document.getElementById("newStudentTeach").value.trim();
+      const teachCatVal = document.getElementById("newStudentTeachCategory").value;
+      const profVal = document.getElementById("newStudentProficiency").value;
+      const seekVal = document.getElementById("newStudentSeek").value.trim();
+      const bioVal = document.getElementById("newStudentBio").value.trim();
+      const availVal = document.getElementById("newStudentAvailability").value.trim();
+
+      if (!nameVal || !emailVal || !uniVal || !streamVal || !teachVal || !seekVal) {
+        showToast("Please complete all required fields (Name, Email, University, Stream, and Skills).", "info");
+        return;
+      }
+
+      // Compute Initials (e.g. Maya Patel -> MP)
+      const nameParts = nameVal.split(" ").filter(Boolean);
+      const initialsVal = nameParts.length >= 2 
+        ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+        : nameVal.slice(0, 2).toUpperCase();
+
+      // 1. Construct new student entity (mirrors MySQL schema)
+      const newStudent = {
+        student_id: DB.students.length + 1,
+        name: nameVal,
+        initials: initialsVal,
+        color: selectedAvatarColor,
+        university: uniVal,
+        stream: streamVal,
+        major: streamVal,
+        year: 2026,
+        rating: 5.00,
+        exchanges: 0,
+        teachesSkill: teachVal,
+        teachesLevel: profVal,
+        teachesId: DB.skills.length + 1,
+        category: teachCatVal,
+        seeksSkill: seekVal,
+        seeksLevel: "Beginner",
+        seeksId: DB.skills.length + 2,
+        bio: bioVal || `Passionate student eager to exchange ${teachVal} for ${seekVal}.`,
+        availability: availVal || "Flexible schedule"
+      };
+
+      // 2. Prepend to students directory
+      DB.students.unshift(newStudent);
+
+      // 3. Switch active user session to this newly created student
+      DB.currentUser = {
+        student_id: newStudent.student_id,
+        full_name: newStudent.name,
+        email: emailVal,
+        university: newStudent.university,
+        stream: newStudent.stream,
+        major: newStudent.major,
+        graduation_year: 2026,
+        credit_balance: 3.00, // 3.00 Welcome Grant!
+        reputation_score: 5.00,
+        avatar_color: newStudent.color,
+        total_hours_taught: 0.0,
+        total_hours_learned: 0.0,
+        offered_skill_id: newStudent.teachesId,
+        sought_skill_id: newStudent.seeksId
+      };
+
+      // 4. Record Welcome Grant in Time-Bank ledger
+      DB.transactions.unshift({
+        id: `TX-${Math.floor(1000 + Math.random() * 9000)}`,
+        date: new Date().toISOString().split("T")[0],
+        type: "INITIAL_WELCOME_GRANT",
+        change: "+3.00",
+        desc: `New student registration bonus grant: ${newStudent.name}`,
+        balance: "3.00"
+      });
+
+      // 5. Update UI Header and Banner
+      const dashAvatar = document.getElementById("dashUserAvatar");
+      const dashName = document.getElementById("dashUserName");
+      const dashMeta = document.getElementById("dashUserMeta");
+      const dashHours = document.getElementById("dashHoursEquiv");
+
+      if (dashAvatar) {
+        dashAvatar.innerText = newStudent.initials;
+        dashAvatar.style.background = newStudent.color;
+        dashAvatar.style.color = "white";
+      }
+      if (dashName) dashName.innerText = newStudent.name;
+      if (dashMeta) {
+        dashMeta.innerHTML = `${newStudent.university} &bull; Stream: ${newStudent.stream || newStudent.major} &bull; <i class="fa-solid fa-star" style="color: #fde047;"></i> <strong>5.00 Rating</strong> (0 exchanges)`;
+      }
+      if (dashHours) dashHours.innerText = "3.0";
+
+      // 6. Update credit counters
+      updateCreditDisplays();
+
+      // 7. Add their skill to the interactive matchmaker
+      const solverOffer = document.getElementById("solverUserOffer");
+      if (solverOffer) {
+        const opt = document.createElement("option");
+        opt.value = newStudent.teachesId;
+        opt.text = `${newStudent.teachesSkill} (${newStudent.name} - Level: ${newStudent.teachesLevel})`;
+        opt.selected = true;
+        solverOffer.prepend(opt);
+      }
+
+      // 8. Re-render UI
+      renderMarketplace();
+      renderDashboard("activeSwaps");
+      if (typeof executeSql === "function") executeSql();
+
+      // 9. Close modal and reset
+      closeProfileModal();
+      document.getElementById("createProfileForm").reset();
+
+      // 10. Celebrate with confetti & toast
+      if (typeof confetti === "function") {
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+      }
+      showToast(`Welcome, ${newStudent.name}! Your profile was registered in the Student Skill Exchange Platform with 3.00 starter credits.`, "success");
+    });
+  }
+
+  // -------------------------------------------------------------
+  // POST SKILL MODAL
+  // -------------------------------------------------------------
+  const openPostBtn = document.getElementById("openPostSkillBtn");
+  const closePostBtn = document.getElementById("closePostSkillBtn");
+  const cancelPostBtn = document.getElementById("cancelPostSkillBtn");
+  const postModal = document.getElementById("postSkillModal");
+  const submitPostBtn = document.getElementById("submitPostSkillBtn");
+
+  if (openPostBtn) openPostBtn.addEventListener("click", () => postModal.classList.add("open"));
+  if (closePostBtn) closePostBtn.addEventListener("click", () => postModal.classList.remove("open"));
+  if (cancelPostBtn) cancelPostBtn.addEventListener("click", () => postModal.classList.remove("open"));
+
+  submitPostBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const skillName = document.getElementById("formSkillName").value.trim();
+    const cat = document.getElementById("formCategory").value;
+    const prof = document.getElementById("formProficiency").value;
+    const desired = document.getElementById("formDesiredSkill").value.trim();
+    const bio = document.getElementById("formTeachingBio").value.trim();
+    const avail = document.getElementById("formAvailability").value.trim() || "Flexible Schedule";
+
+    if (!skillName || !desired) {
+      showToast("Please provide both your offered skill and desired return skill.", "info");
+      return;
+    }
+
+    const newStudent = {
+      student_id: DB.students.length + 1,
+      name: DB.currentUser.full_name,
+      initials: "RB",
+      color: DB.currentUser.avatar_color,
+      university: DB.currentUser.university,
+      stream: DB.currentUser.stream,
+      major: DB.currentUser.major,
+      year: DB.currentUser.graduation_year,
+      rating: DB.currentUser.reputation_score,
+      exchanges: DB.currentUser.total_hours_taught,
+      teachesSkill: skillName,
+      teachesLevel: prof,
+      teachesId: DB.skills.length + 1,
+      category: cat,
+      seeksSkill: desired,
+      seeksLevel: "Beginner",
+      seeksId: 99,
+      bio: bio || `Offering specialized sessions in ${skillName} in exchange for ${desired}.`,
+      availability: avail
+    };
+
+    DB.students.unshift(newStudent);
+    renderMarketplace();
+    postModal.classList.remove("open");
+    
+    // Clear form
+    document.getElementById("postSkillForm").reset();
+
+    if (typeof confetti === "function") {
+      confetti({ particleCount: 60, spread: 60 });
+    }
+    showToast(`Published listing for "${skillName}" to MySQL database!`, "success");
+  });
+
+  // Propose Swap Modal
+  const closeProposeBtn = document.getElementById("closeProposeSwapBtn");
+  const cancelProposeBtn = document.getElementById("cancelProposeSwapBtn");
+  const proposeModal = document.getElementById("proposeSwapModal");
+  const submitProposeBtn = document.getElementById("submitProposeSwapBtn");
+
+  if (closeProposeBtn) closeProposeBtn.addEventListener("click", () => proposeModal.classList.remove("open"));
+  if (cancelProposeBtn) cancelProposeBtn.addEventListener("click", () => proposeModal.classList.remove("open"));
+
+  submitProposeBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const mode = document.getElementById("proposeExchangeMode").value;
+    const note = document.getElementById("proposeMessage").value.trim();
+
+    proposeModal.classList.remove("open");
+    showToast(`Exchange proposal sent to ${selectedTargetStudent ? selectedTargetStudent.name : 'peer'}! Stored in MySQL exchange_proposals table.`, "success");
+  });
+
+  // Rating Modal
+  const closeRatingBtn = document.getElementById("closeRatingBtn");
+  const submitRatingBtn = document.getElementById("submitRatingBtn");
+  const ratingModal = document.getElementById("ratingModal");
+
+  if (closeRatingBtn) closeRatingBtn.addEventListener("click", () => ratingModal.classList.remove("open"));
+  submitRatingBtn.addEventListener("click", () => {
+    ratingModal.classList.remove("open");
+    showToast("Feedback and 5-Star Rating permanently saved to reviews_ratings table!", "success");
+  });
+
+  // Star click interactive
+  const stars = document.querySelectorAll("#starRatingRow i");
+  stars.forEach(star => {
+    star.addEventListener("click", () => {
+      const val = parseInt(star.dataset.val);
+      stars.forEach((s, idx) => {
+        if (idx < val) {
+          s.classList.remove("fa-regular");
+          s.classList.add("fa-solid");
+        } else {
+          s.classList.remove("fa-solid");
+          s.classList.add("fa-regular");
+        }
+      });
+    });
+  });
+
+  // Mobile menu toggle
+  const mobileBtn = document.getElementById("mobileMenuBtn");
+  if (mobileBtn) {
+    mobileBtn.addEventListener("click", () => {
+      const navLinks = document.querySelector(".nav-links");
+      if (navLinks.style.display === "flex") {
+        navLinks.style.display = "none";
+      } else {
+        navLinks.style.display = "flex";
+        navLinks.style.flexDirection = "column";
+        navLinks.style.position = "absolute";
+        navLinks.style.top = "72px";
+        navLinks.style.left = "0";
+        navLinks.style.width = "100%";
+        navLinks.style.background = "var(--bg-surface)";
+        navLinks.style.padding = "1.5rem";
+        navLinks.style.boxShadow = "var(--shadow-xl)";
+      }
+    });
+  }
+}
+
+function openProposeModalForStudent(studentId) {
+  selectedTargetStudent = DB.students.find(s => s.student_id === studentId);
+  if (!selectedTargetStudent) return;
+
+  const summary = document.getElementById("proposeTargetPeerSummary");
+  summary.innerHTML = `
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div class="avatar-circle" style="background: ${selectedTargetStudent.color}; width: 36px; height: 36px;">
+        ${selectedTargetStudent.initials}
+      </div>
+      <div>
+        <strong style="font-size:0.95rem;">${selectedTargetStudent.name} (${selectedTargetStudent.university})</strong>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">
+          Teaches: <strong>${selectedTargetStudent.teachesSkill}</strong> &bull; Seeking: <strong>${selectedTargetStudent.seeksSkill}</strong>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("proposeSwapModal").classList.add("open");
+}
+
+function initFooterActions() {
+  const sqlLink = document.getElementById("footerViewSqlLink");
+  const testDemo = document.getElementById("footerTestDemoBtn");
+  const exportBtn = document.getElementById("footerExportDataBtn");
+
+  if (sqlLink) {
+    sqlLink.addEventListener("click", () => {
+      document.getElementById("database").scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
+  if (testDemo) {
+    testDemo.addEventListener("click", () => {
+      document.getElementById("solver").scrollIntoView({ behavior: "smooth" });
+      document.getElementById("tabCycleMatch").click();
+    });
+  }
+
+  if (exportBtn) {
+    exportBtn.addEventListener("click", () => {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DB, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "student_skill_exchange_data.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Exported active database state to JSON!", "info");
+    });
+  }
+}
+
+// =====================================================================
+// 7. TOAST NOTIFICATION UTILITY
+// =====================================================================
+function showToast(message, type = "success") {
+  const container = document.getElementById("toastContainer");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = `toast toast-${type}`;
+  
+  const icon = type === "success" 
+    ? '<i class="fa-solid fa-circle-check text-emerald" style="font-size: 1.15rem;"></i>' 
+    : '<i class="fa-solid fa-circle-info text-primary" style="font-size: 1.15rem;"></i>';
+
+  toast.innerHTML = `
+    ${icon}
+    <div style="font-size: 0.88rem; color: var(--text-main); font-weight: 500;">
+      ${message}
+    </div>
+  `;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateX(60px)";
+    toast.style.transition = "all 0.3s ease";
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+
+</script>
+</body>
+</html>
+

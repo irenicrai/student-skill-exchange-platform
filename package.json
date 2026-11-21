@@ -1,0 +1,21 @@
+{
+  "name": "student-skill-exchange-platform",
+  "version": "1.0.0",
+  "description": "Student Skill Exchange Platform - Academic P2P skill barter web app with MySQL 8.0, 3-way cycle detection, and time-banking tokens.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "skill-exchange",
+    "peer-to-peer",
+    "mysql",
+    "academic-project",
+    "bca"
+  ],
+  "author": "Rai Bose",
+  "license": "MIT"
+}

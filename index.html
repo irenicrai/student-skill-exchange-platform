@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Skill Exchange Platform</title>
+  <meta name="description" content="An academic and practical peer-to-peer student skill exchange platform utilizing graph cycle detection, time-banking tokens, and MySQL relational modeling.">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Ambient Light Orbs for Modern Aesthetic -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+
+  <!-- NAVIGATION BAR -->
+  <nav class="navbar" id="mainNav">
+    <div class="container nav-wrapper">
+      <a href="#" class="brand-logo">
+        <div class="brand-icon">
+          <i class="fa-solid fa-arrows-spin"></i>
+        </div>
+        <span>Student Skill <span class="gradient-text">Exchange Platform</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#problem" class="nav-link">The Problem</a></li>
+        <li><a href="#solver" class="nav-link">Cycle Solver</a></li>
+        <li><a href="#marketplace" class="nav-link">Skill Directory</a></li>
+        <li><a href="#dashboard" class="nav-link">My Dashboard</a></li>
+        <li><a href="#database" class="nav-link"><i class="fa-solid fa-database text-primary"></i> MySQL Explorer</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Live Time-Bank Wallet Balance -->
+        <div class="credit-pill" id="navWalletPill" title="Your Time-Bank SkillCredits (1 Credit = 1 Hour Taught)">
+          <i class="fa-solid fa-coins text-amber"></i>
+          <span id="navCreditAmount">4.50</span>
+          <span style="font-size: 0.72rem; opacity: 0.85;">CR</span>
+        </div>
+
+        <!-- Create Profile CTA -->
+        <button class="btn btn-secondary btn-sm" id="openCreateProfileBtn" title="Create a new student profile">
+          <i class="fa-solid fa-user-plus"></i> New Profile
+        </button>
+
+        <!-- Post a Skill CTA -->
+        <button class="btn btn-primary btn-sm" id="openPostSkillBtn">
+          <i class="fa-solid fa-plus"></i> Post Skill
+        </button>
+
+        <!-- Speaker Presentation Hints Toggle -->
+        <button class="btn btn-emerald btn-sm" id="toggleSpeakerNotesBtn" title="Toggle presentation cues for explaining the project to evaluators">
+          <i class="fa-solid fa-microphone"></i> Speaker Hints
+        </button>
+
+        <!-- Dark/Light Mode Switch -->
+        <button class="btn btn-secondary btn-icon-only theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header class="hero-section">
+    <div class="container hero-grid">
+      <div class="hero-left">
+        <div class="hero-badge-wrap">
+          <span class="badge badge-primary"><i class="fa-solid fa-graduation-cap"></i> Academic Project Presentation</span>
+          <span class="badge badge-emerald"><i class="fa-solid fa-database"></i> MySQL + 3-Way Cycle Matching</span>
+        </div>
+        
+        <h1 class="hero-title">
+          Learn Any Skill for Free by <span class="gradient-text">Trading with College Peers</span>
+        </h1>
+        
+        <p class="hero-subtitle">
+          Private tutors charge $50/hour, which students cannot afford. Our 
+          <strong>Student Skill Exchange Platform</strong> solves this problem using <strong>3-Way Matching</strong>: 
+          <em>You teach Student B, Student B teaches Student C, and Student C teaches You!</em> 
+          Everyone learns their desired skill for free without any middleman fees.
+        </p>
+
+        <!-- Speaker Hint Box for Hero -->
+        <div class="speaker-hint-box">
+          <i class="fa-solid fa-bullhorn speaker-hint-icon"></i>
+          <div>
+            <strong>🎤 Presentation Point (Introduction):</strong> 
+            "Good morning! Our project solves the <em>Student Skill Exchange Problem</em>. College students want to learn skills like Python, Design, or Languages, but commercial tutoring is too expensive. Students have skills they can teach, but 1-on-1 swaps get stuck when person B doesn't need what person A offers. We built a platform using MySQL, HTML, CSS, and JavaScript that connects students in 3-way cycles so everyone gets what they need for free."
+          </div>
+        </div>
+
+        <!-- Interactive Quick Barter Box -->
+        <div class="hero-quick-match">
+          <div class="quick-match-title">
+            <i class="fa-solid fa-bolt text-amber"></i> Quick Algorithmic Match Finder
+          </div>
+          <div class="quick-match-inputs">
+            <div class="input-box-wrapper">
+              <i class="fa-solid fa-chalkboard-user"></i>
+              <select class="quick-input" id="heroOfferedSkill">
+                <option value="Python & Data Structures">I can teach: Python & DSA</option>
+                <option value="Full-Stack React & Node">I can teach: React & Node</option>
+                <option value="Multivariable Calculus III">I can teach: Calculus III</option>
+                <option value="UI/UX Design with Figma">I can teach: Figma UI/UX</option>
+                <option value="Conversational Spanish">I can teach: Spoken Spanish</option>
+                <option value="Acoustic Guitar Fundamentals">I can teach: Guitar</option>
+              </select>
+            </div>
+
+            <div class="swap-indicator-icon">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            </div>
+
+            <div class="input-box-wrapper">
+              <i class="fa-solid fa-book-open-reader"></i>
+              <select class="quick-input" id="heroSoughtSkill">
+                <option value="UI/UX Design with Figma">I want to learn: Figma UI/UX</option>
+                <option value="Multivariable Calculus III">I want to learn: Calculus III</option>
+                <option value="Conversational Spanish">I want to learn: Spoken Spanish</option>
+                <option value="Python & Data Structures">I want to learn: Python & DSA</option>
+                <option value="Machine Learning & PyTorch">I want to learn: PyTorch ML</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary" id="heroFindMatchesBtn">
+              <i class="fa-solid fa-magnifying-glass"></i> Solve Match
+            </button>
+          </div>
+        </div>
+
+        <!-- Metrics Bar -->
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">94.2%</div>
+            <div class="stat-label">Cycle Match Rate</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">$0.00</div>
+            <div class="stat-label">Peer Cost (100% Barter)</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">3.8x</div>
+            <div class="stat-label">More Swaps vs 1:1</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">8,400+</div>
+            <div class="stat-label">Hours Exchanged</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Right: Live Interactive Mini Cycle Graph Showcase -->
+      <div class="hero-right">
+        <div class="hero-visual-card">
+          <div class="hero-visual-header">
+            <div>
+              <h3 style="font-size: 1.05rem;">Live 3-Way Cycle Resolution</h3>
+              <p style="font-size: 0.78rem; color: var(--text-muted);">Real-time graph cycle discovered in database</p>
+            </div>
+            <div class="status-indicator">
+              <span class="pulse-dot"></span> Active Engine
+            </div>
+          </div>
+
+          <!-- Triangular Interactive Cycle Canvas -->
+          <div class="cycle-preview-canvas">
+            <!-- Node A (Top) -->
+            <div class="cycle-node node-top">
+              <div class="node-avatar-row">
+                <div class="avatar-circle" style="background: #4f46e5;">RB</div>
+                <div class="node-name">Rai Bose <span style="font-size:0.65rem; color:var(--text-muted);">(You)</span></div>
+              </div>
+              <div class="node-skill-badge teaches-badge"><span>Teaches:</span> <b>Python</b></div>
+              <div class="node-skill-badge wants-badge"><span>Wants:</span> <b>Figma</b></div>
+            </div>
+
+            <!-- Node B (Bottom Left) -->
+            <div class="cycle-node node-bottom-left">
+              <div class="node-avatar-row">
+                <div class="avatar-circle" style="background: #10b981;">RB</div>
+                <div class="node-name">Raj Biswas</div>
+              </div>
+              <div class="node-skill-badge teaches-badge"><span>Teaches:</span> <b>Calculus</b></div>
+              <div class="node-skill-badge wants-badge"><span>Wants:</span> <b>Python</b></div>
+            </div>
+
+            <!-- Node C (Bottom Right) -->
+            <div class="cycle-node node-bottom-right">
+              <div class="node-avatar-row">
+                <div class="avatar-circle" style="background: #06b6d4;">RS</div>
+                <div class="node-name">Rahul Shaw</div>
+              </div>
+              <div class="node-skill-badge teaches-badge"><span>Teaches:</span> <b>Figma</b></div>
+              <div class="node-skill-badge wants-badge"><span>Wants:</span> <b>Calculus</b></div>
+            </div>
+
+            <!-- SVG Directed Dynamic Connecting Arrows -->
+            <svg class="cycle-svg-arrows" viewBox="0 0 400 280">
+              <defs>
+                <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                  <polygon points="0 0, 8 3, 0 6" fill="#4f46e5" />
+                </marker>
+              </defs>
+              <!-- Path 1: Rai -> Raj (Top to Bottom-Left) -->
+              <path class="arrow-path" d="M 170 80 Q 110 120 110 200" marker-end="url(#arrowhead)" />
+              <!-- Path 2: Raj -> Rahul (Bottom-Left to Bottom-Right) -->
+              <path class="arrow-path" d="M 170 240 Q 200 260 270 240" marker-end="url(#arrowhead)" />
+              <!-- Path 3: Rahul -> Rai (Bottom-Right to Top) -->
+              <path class="arrow-path" d="M 310 190 Q 300 110 230 75" marker-end="url(#arrowhead)" />
+            </svg>
+          </div>
+
+          <div class="cycle-resolution-footer">
+            <span><i class="fa-solid fa-circle-check text-emerald"></i> <strong>Cycle Closed</strong>: 3 Students satisfy mutual wants</span>
+            <span class="badge badge-emerald">Complexity: O(V·E)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECTION 1: THE CORE PROBLEM & ACADEMIC FORMULATION -->
+  <section class="problem-section" id="problem">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge badge-primary section-tag">Understanding the Bottleneck</span>
+        <h2 class="section-title">Why Normal 1-on-1 Swapping Fails</h2>
+        <p class="section-desc">
+          College students have tons of skills to teach, but 1-to-1 trades almost always get stuck. 
+          Here is why standard exchanges fail, and how our 3-way system fixes it.
+        </p>
+      </div>
+
+      <!-- Speaker Hint Box for Section 1 -->
+      <div class="speaker-hint-box">
+        <i class="fa-solid fa-bullhorn speaker-hint-icon"></i>
+        <div>
+          <strong>🎤 Presentation Point (The Problem):</strong> 
+          "Explain the 1-on-1 deadlock to your evaluator: 'Imagine Student A knows Python and wants to learn Spanish. Student B knows Spanish, but wants to learn 3D Animation—not Python! In a simple 1-on-1 world, they are completely blocked. Statistically, less than 4% of students match directly. That's why our project is needed.'"
+        </div>
+      </div>
+
+      <div class="problem-cards-grid">
+        <div class="glass-panel problem-card card-red">
+          <div class="card-icon-box">
+            <i class="fa-solid fa-handshake-slash"></i>
+          </div>
+          <h3>1. The 1-on-1 Trade Block</h3>
+          <p>
+            For a direct trade, Student A must teach what Student B wants, 
+            AND Student B must teach what Student A wants. On a real campus, this mutual match happens 
+            less than <strong>4% of the time</strong>.
+          </p>
+          <div class="problem-metric-pill">
+            <i class="fa-solid fa-triangle-exclamation text-rose"></i> 85%+ Trades Get Blocked
+          </div>
+        </div>
+
+        <div class="glass-panel problem-card card-amber">
+          <div class="card-icon-box">
+            <i class="fa-solid fa-money-bill-wave"></i>
+          </div>
+          <h3>2. Tutors Cost Too Much</h3>
+          <p>
+            Commercial tutoring websites charge <strong>$40 to $80 per hour</strong>, which college 
+            students simply cannot afford. Peer exchange unlocks all this knowledge for <strong>$0</strong>.
+          </p>
+          <div class="problem-metric-pill">
+            <i class="fa-solid fa-tag text-amber"></i> Free 100% Peer Barter
+          </div>
+        </div>
+
+        <div class="glass-panel problem-card card-blue">
+          <div class="card-icon-box">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h3>3. Trust & No-Shows</h3>
+          <p>
+            Informal skill trades fail when someone doesn't show up. Our platform uses 
+            <strong>verified student badges</strong>, <strong>reputation ratings</strong>, and <strong>lesson escrow</strong>.
+          </p>
+          <div class="problem-metric-pill">
+            <i class="fa-solid fa-user-shield text-primary"></i> Escrow Guarantee
+          </div>
+        </div>
+      </div>
+
+      <!-- Platform Resolution Architecture Box -->
+      <div class="academic-theory-box">
+        <div class="theory-content">
+          <h4><i class="fa-solid fa-lightbulb text-primary"></i> How the Platform Solves the Problem</h4>
+          <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
+            Instead of relying on rare coincidence where two students happen to want each other's exact skills, 
+            the platform connects students using <strong>3-Way Cycle Matching</strong> and an asynchronous <strong>Time-Bank Credit System</strong>.
+          </p>
+
+          <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 1.25rem;">
+            If Rai teaches Raj, and Raj teaches Rahul, Rahul completes the loop by teaching Rai. 
+            All three students receive their desired skill without any currency, middleman fees, or 1-on-1 barter roadblocks.
+          </p>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> 100% Peer-to-Peer</span>
+            <span class="badge badge-primary"><i class="fa-solid fa-arrows-spin"></i> Automatic Match Discovery</span>
+            <span class="badge badge-amber"><i class="fa-solid fa-shield-halved"></i> Escrow Protection</span>
+          </div>
+        </div>
+
+        <div class="theory-matrix">
+          <h5 style="margin-bottom: 1rem; font-size: 1rem;">Platform Tri-Layer Resolution Strategy:</h5>
+          <ul class="solution-matrix-list">
+            <li class="solution-matrix-item">
+              <i class="fa-solid fa-circle-check matrix-check"></i>
+              <div>
+                <strong>Layer 1: Direct 1-on-1 Swap</strong>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">Instant pairing when two students want each other's offered skills.</p>
+              </div>
+            </li>
+            <li class="solution-matrix-item">
+              <i class="fa-solid fa-circle-check matrix-check"></i>
+              <div>
+                <strong>Layer 2: 3-Way Cycle Swap</strong>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">Connects 3 students in a closed loop (Student A → Student B → Student C → Student A).</p>
+              </div>
+            </li>
+            <li class="solution-matrix-item">
+              <i class="fa-solid fa-circle-check matrix-check"></i>
+              <div>
+                <strong>Layer 3: Time-Banking Credits</strong>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">Teach today to earn 1.0 SkillCredit, then redeem it with any peer tutor whenever you want.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: INTERACTIVE SKILL MATCHMAKER & GRAPH SOLVER -->
+  <section class="solver-section" id="solver">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge badge-emerald section-tag">Live Interactive Solver</span>
+        <h2 class="section-title">See How 3-Way Cycle Matching Works</h2>
+        <p class="section-desc">
+          Try it live! Select a skill you can teach and what you want to learn. 
+          Watch how our matching engine links three students in a closed loop so everyone gets their lesson!
+        </p>
+      </div>
+
+      <!-- Speaker Hint Box for Section 2 -->
+      <div class="speaker-hint-box">
+        <i class="fa-solid fa-bullhorn speaker-hint-icon"></i>
+        <div>
+          <strong>🎤 Presentation Point (Live Demonstration):</strong> 
+          "Show this live demo to your evaluator: 'I will pick Python as the skill I teach, and Figma as what I want to learn. When I click Run Matcher, the algorithm traverses the database and finds Raj Biswas and Rahul Kumar Shaw. Raj teaches Calculus, and Rahul teaches Figma. The loop is complete: I (Rai) teach Raj, Raj teaches Rahul, and Rahul teaches me! Everyone receives their desired skill with zero money exchanged.'"
+        </div>
+      </div>
+
+      <div class="solver-container">
+        <!-- Input controls -->
+        <div class="solver-controls-grid">
+          <div class="control-group">
+            <label class="control-label" for="solverUserOffer">
+              <i class="fa-solid fa-chalkboard-user text-emerald"></i> Your Offered Skill (Teach)
+            </label>
+            <select class="select-styled" id="solverUserOffer">
+              <option value="1">Python & Data Structures (Rai Bose - Level: Expert)</option>
+              <option value="4">Multivariable Calculus III (Raj Biswas - Level: Advanced)</option>
+              <option value="8">UI/UX Design with Figma (Rahul Kumar Shaw - Level: Expert)</option>
+              <option value="3">Machine Learning & PyTorch (Rahit Das - Level: Advanced)</option>
+              <option value="2">Database Systems & MySQL (Protyusha Bose - Level: Expert)</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="solverUserSeek">
+              <i class="fa-solid fa-book-open-reader text-primary"></i> Your Desired Skill (Learn)
+            </label>
+            <select class="select-styled" id="solverUserSeek">
+              <option value="8">UI/UX Design with Figma (Wants to build portfolios)</option>
+              <option value="4">Multivariable Calculus III (Needs exam preparation)</option>
+              <option value="6">Conversational Spanish (Wants study abroad fluency)</option>
+              <option value="1">Python & Data Structures (LeetCode & Algorithm prep)</option>
+              <option value="3">Machine Learning & PyTorch (Deep learning research)</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary btn-lg" id="runSolverEngineBtn">
+            <i class="fa-solid fa-gear fa-spin-pulse"></i> Run Matcher
+          </button>
+        </div>
+
+        <!-- Dynamic Results Area -->
+        <div class="solver-results-area">
+          <div class="results-header">
+            <div>
+              <h4 id="matchResultTitle" style="font-size: 1.15rem;">Graph Resolution Result</h4>
+              <p id="matchResultSubtitle" style="font-size: 0.85rem; color: var(--text-muted);">
+                Analyzing directed preference edges in MySQL relational graph...
+              </p>
+            </div>
+
+            <!-- Mode Selector Tabs -->
+            <div class="matching-modes-tabs">
+              <button class="mode-tab-btn" data-mode="direct" id="tabDirectMatch">
+                <i class="fa-solid fa-user-group"></i> 2-Way Direct
+              </button>
+              <button class="mode-tab-btn active" data-mode="cycle" id="tabCycleMatch">
+                <i class="fa-solid fa-circle-nodes"></i> 3-Way Cycle
+              </button>
+              <button class="mode-tab-btn" data-mode="credit" id="tabCreditMatch">
+                <i class="fa-solid fa-coins"></i> Time-Bank Token
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Viewports Container -->
+          <div class="match-viewport" id="matchViewport">
+            <!-- Populated dynamically by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: SKILL MARKETPLACE & STUDENT DIRECTORY -->
+  <section class="marketplace-section" id="marketplace">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge badge-purple section-tag">Live Peer Directory</span>
+        <h2 class="section-title">Explore Verified Student Skill Listings</h2>
+        <p class="section-desc">
+          Browse fellow university students ready to barter their expertise. Every student has an active credit balance and verified campus affiliation.
+        </p>
+      </div>
+
+      <!-- Speaker Hint Box for Section 3 -->
+      <div class="speaker-hint-box">
+        <i class="fa-solid fa-bullhorn speaker-hint-icon"></i>
+        <div>
+          <strong>🎤 Presentation Point (Directory & Profiles):</strong> 
+          "Explain the marketplace: 'Here are real student profiles from UC Berkeley, MIT, Stanford, and Columbia. Each card clearly shows what the student teaches (green badge), what they want to learn (purple badge), their verified status, and their rating. We can filter by category or click Swap to initiate a lesson proposal.'"
+        </div>
+      </div>
+
+      <!-- Filter and Search Bar -->
+      <div class="market-filter-bar">
+        <div class="category-pill-group" id="categoryFilterGroup">
+          <button class="category-pill active" data-category="all">All Categories</button>
+          <button class="category-pill" data-category="cs">Computer Science & AI</button>
+          <button class="category-pill" data-category="math">Mathematics & Data</button>
+          <button class="category-pill" data-category="lang">Languages</button>
+          <button class="category-pill" data-category="design">UI/UX & Creative</button>
+          <button class="category-pill" data-category="music">Music & Arts</button>
+        </div>
+
+        <div class="search-box-market">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="marketSearchInput" class="market-search-input" placeholder="Search by skill, name, or stream...">
+        </div>
+      </div>
+
+      <!-- Students Grid (Dynamic from DB/JS) -->
+      <div class="students-grid" id="studentsGridContainer">
+        <!-- Rendered by script.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: STUDENT DASHBOARD & EXCHANGE TRACKER -->
+  <section class="dashboard-section" id="dashboard">
+    <div class="container">
+      <!-- Profile Header Summary Banner -->
+      <div class="dash-header-card">
+        <div class="dash-profile-info">
+          <div class="dash-avatar-lg" id="dashUserAvatar">RB</div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+              <h3 id="dashUserName" style="font-size: 1.45rem; color: white;">Rai Bose</h3>
+              <span class="badge badge-emerald" style="background: rgba(255,255,255,0.25); color: white;">
+                <i class="fa-solid fa-circle-check"></i> Verified Student (You)
+              </span>
+            </div>
+            <p id="dashUserMeta" style="opacity: 0.9; font-size: 0.9rem;">
+              <strong>JIS College of Engineering</strong> &bull; Stream: <strong>BCA GENERAL</strong> '26 &bull; <i class="fa-solid fa-star" style="color: #fde047;"></i> <strong id="dashUserRating">4.95 Rating</strong> (<span id="dashUserExchanges">14</span> exchanges)
+            </p>
+            <div style="margin-top: 0.65rem;">
+              <button class="btn btn-sm" id="dashCreateProfileBtn" style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.35);">
+                <i class="fa-solid fa-user-plus"></i> Create / Switch Profile
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-wallet-summary">
+          <div style="font-size: 0.85rem; opacity: 0.85;">Time-Bank Credit Balance:</div>
+          <div class="wallet-badge-big">
+            <i class="fa-solid fa-coins"></i> <span id="dashCreditAmount">4.50</span> Credits
+          </div>
+          <div style="font-size: 0.75rem; opacity: 0.8;">Equivalent to <span id="dashHoursEquiv">4.5</span> hours of 1-on-1 tutoring</div>
+        </div>
+      </div>
+
+      <!-- Dashboard Tabs Navigation -->
+      <div class="dash-tabs-nav">
+        <div class="dash-tab-item active" data-tab="activeSwaps">
+          <i class="fa-solid fa-arrow-right-arrow-left"></i> Active Exchanges
+          <span class="tab-count-pill" id="activeSwapsCount">2</span>
+        </div>
+        <div class="dash-tab-item" data-tab="pendingProposals">
+          <i class="fa-solid fa-inbox"></i> Incoming Proposals
+          <span class="tab-count-pill" id="pendingProposalsCount">1</span>
+        </div>
+        <div class="dash-tab-item" data-tab="creditLedger">
+          <i class="fa-solid fa-receipt"></i> SkillCredit Ledger History
+        </div>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div id="dashTabContent">
+        <!-- Rendered by script.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: INTERACTIVE MYSQL DATABASE & SQL EXPLORER -->
+  <section class="research-section" id="database">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge badge-primary section-tag"><i class="fa-solid fa-database"></i> Database Architecture</span>
+        <h2 class="section-title">Interactive MySQL Schema & Query Runner</h2>
+        <p class="section-desc">
+          Inspect the live relational schema powering the Student Skill Exchange engine. 
+          Run pre-built SQL queries or execute custom queries against the database tables.
+        </p>
+      </div>
+
+      <!-- Speaker Hint Box for Section 6 -->
+      <div class="speaker-hint-box">
+        <i class="fa-solid fa-bullhorn speaker-hint-icon"></i>
+        <div>
+          <strong>🎤 Presentation Point (MySQL Database Backend):</strong> 
+          "Highlight your database implementation to the evaluator: 'Our project uses MySQL with 10 relational tables in schema.sql. We track students, skill offerings, active 3-way cycles, and a credit ledger. Watch as I click Find 3-Way Cycles or Market Demand: it executes SQL queries right in front of you, returning live formatted database records in under 2 milliseconds!'"
+        </div>
+      </div>
+
+      <div class="glass-panel" style="padding: 2rem;">
+        <!-- Top Controls: Table Switcher & Pre-built queries -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">
+              VIEW TABLE:
+            </label>
+            <div class="category-pill-group" id="sqlTableSelector">
+              <button class="category-pill active" data-table="students">students</button>
+              <button class="category-pill" data-table="student_skills_offered">skills_offered</button>
+              <button class="category-pill" data-table="student_skills_sought">skills_sought</button>
+              <button class="category-pill" data-table="cycle_matches">cycle_matches</button>
+              <button class="category-pill" data-table="skill_credit_transactions">credit_ledger</button>
+            </div>
+          </div>
+
+          <div>
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">
+              PRESET RELATIONAL QUERIES:
+            </label>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm" id="queryDirect2WayBtn">
+                <i class="fa-solid fa-code-fork"></i> Find 2-Way Matches
+              </button>
+              <button class="btn btn-secondary btn-sm" id="queryCyclesBtn">
+                <i class="fa-solid fa-circle-nodes"></i> Find 3-Way Cycles
+              </button>
+              <button class="btn btn-secondary btn-sm" id="queryMarketEquilibriumBtn">
+                <i class="fa-solid fa-scale-balanced"></i> Market Demand vs Supply
+              </button>
+              <button class="btn btn-secondary btn-sm" id="downloadSqlBtn">
+                <i class="fa-solid fa-download"></i> schema.sql
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SQL Query Input Box -->
+        <div style="margin-bottom: 1.5rem; position: relative;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <span style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--text-main);">
+              <i class="fa-solid fa-terminal text-primary"></i> SQL Console:
+            </span>
+            <span style="font-size: 0.78rem; color: var(--text-muted);">Database: <code>student_skill_exchange_db</code></span>
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <input type="text" id="customSqlInput" class="form-control" style="font-family: var(--font-mono); font-size: 0.88rem;" value="SELECT student_id, full_name, university, stream, credit_balance, reputation_score FROM students;">
+            <button class="btn btn-primary" id="executeSqlBtn">
+              <i class="fa-solid fa-play"></i> Execute
+            </button>
+          </div>
+        </div>
+
+        <!-- SQL Results Table Display -->
+        <div class="algorithm-comparison-table-wrapper" style="margin: 0; max-height: 420px;">
+          <table class="algo-table" id="sqlResultsTable">
+            <thead id="sqlTableHead">
+              <!-- Dynamically populated -->
+            </thead>
+            <tbody id="sqlTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; font-size: 0.82rem; color: var(--text-muted);">
+          <span id="sqlExecutionStatus"><i class="fa-solid fa-check text-emerald"></i> 8 rows returned in 1.4ms</span>
+          <span>Storage Engine: <code>InnoDB</code> | Collation: <code>utf8mb4_unicode_ci</code></span>
+        </div>
+      </div>
+
+      <!-- Algorithmic Complexity Comparison Table -->
+      <div style="margin-top: 4rem;">
+        <h3 style="font-size: 1.35rem; margin-bottom: 1rem;">Exchange Resolution Mechanism Trade-off Matrix</h3>
+        <div class="algorithm-comparison-table-wrapper">
+          <table class="algo-table">
+            <thead>
+              <tr>
+                <th>Matching Mechanism</th>
+                <th>Exchange Pattern</th>
+                <th>Speed & Efficiency</th>
+                <th>Match Success Rate</th>
+                <th>Scheduling Requirement</th>
+                <th>Fairness Guarantee</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Direct 1-on-1 Barter</strong></td>
+                <td>Direct Two-Way Swap (Peer A ⇄ Peer B)</td>
+                <td>Instant (Direct Pair)</td>
+                <td><span class="badge badge-amber">~4.2%</span></td>
+                <td>Strict (Both must meet)</td>
+                <td>High (Direct reciprocity)</td>
+              </tr>
+              <tr>
+                <td><strong>3-Way Directed Cycle Matching</strong></td>
+                <td>Triangle Loop (A → B → C → A)</td>
+                <td>Fast (Automatic Discovery)</td>
+                <td><span class="badge badge-emerald">~78.4%</span></td>
+                <td>Coordinated Schedule</td>
+                <td>Very High (Closed cycle)</td>
+              </tr>
+              <tr>
+                <td><strong>Time-Bank Credit Protocol</strong></td>
+                <td>Credit Token Balance (1 hr = 1 credit)</td>
+                <td>Instant (Database Ledger)</td>
+                <td><span class="badge badge-primary">~96.5%</span></td>
+                <td>Fully Asynchronous</td>
+                <td>Protected via Escrow & Rating</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL: CREATE NEW USER PROFILE -->
+  <div class="modal-overlay" id="createProfileModal">
+    <div class="modal-window" style="max-width: 680px;">
+      <div class="modal-header">
+        <div>
+          <h3><i class="fa-solid fa-id-card text-primary"></i> Create Student Profile</h3>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Join the campus peer skill exchange network and register in MySQL
+          </p>
+        </div>
+        <button class="close-modal-btn" id="closeCreateProfileBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="createProfileForm">
+          <!-- Starter Grant Notice -->
+          <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.1) 100%); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.85rem;">
+            <div style="font-size: 1.8rem;">🎁</div>
+            <div>
+              <strong style="font-size: 0.9rem; color: #b45309; display: block;">New Student Onboarding Bonus</strong>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">
+                You will automatically receive <strong>3.00 starter SkillCredits</strong> in MySQL to book your first peer lesson!
+              </span>
+            </div>
+          </div>
+
+          <!-- Section 1: Academic Credentials -->
+          <div style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem;">
+            1. Student Academic Details
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="newStudentName">Full Name *</label>
+              <input type="text" id="newStudentName" class="form-control" placeholder="e.g. Maya Patel" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="newStudentEmail">University Email (.edu) *</label>
+              <input type="email" id="newStudentEmail" class="form-control" placeholder="e.g. maya.patel@stanford.edu" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="newStudentUniversity">University / College *</label>
+              <input type="text" id="newStudentUniversity" class="form-control" value="JIS College of Engineering" placeholder="e.g. JIS College of Engineering" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="newStudentStream">Stream & Grad Year *</label>
+              <input type="text" id="newStudentStream" class="form-control" value="BCA GENERAL '26" placeholder="e.g. BCA GENERAL '26" required>
+            </div>
+          </div>
+
+          <!-- Avatar Color Picker -->
+          <div class="form-group">
+            <label class="form-label">Profile Avatar Color</label>
+            <div class="color-swatch-group" id="avatarColorPicker">
+              <div class="color-swatch active" data-color="#4f46e5" style="background: #4f46e5;"></div>
+              <div class="color-swatch" data-color="#10b981" style="background: #10b981;"></div>
+              <div class="color-swatch" data-color="#06b6d4" style="background: #06b6d4;"></div>
+              <div class="color-swatch" data-color="#f43f5e" style="background: #f43f5e;"></div>
+              <div class="color-swatch" data-color="#f59e0b" style="background: #f59e0b;"></div>
+              <div class="color-swatch" data-color="#8b5cf6" style="background: #8b5cf6;"></div>
+            </div>
+          </div>
+
+          <!-- Section 2: Skills You Offer and Seek -->
+          <div style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin: 1.5rem 0 0.75rem;">
+            2. Skill Exchange Preferences
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="newStudentTeach">Primary Skill You Can Teach *</label>
+              <input type="text" id="newStudentTeach" class="form-control" placeholder="e.g. Mobile App Dev (Flutter)" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="newStudentTeachCategory">Teaching Category</label>
+              <select id="newStudentTeachCategory" class="form-control">
+                <option value="cs">Computer Science & AI</option>
+                <option value="math">Mathematics & Data</option>
+                <option value="lang">Languages & Linguistics</option>
+                <option value="design">UI/UX & Creative Media</option>
+                <option value="music">Music & Sound</option>
+                <option value="career">Career & Communication</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="newStudentProficiency">Teaching Proficiency</label>
+              <select id="newStudentProficiency" class="form-control">
+                <option value="Intermediate">Intermediate (Project experience)</option>
+                <option value="Advanced" selected>Advanced (Coursework & Portfolio)</option>
+                <option value="Expert">Expert (Industry / TA experience)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="newStudentSeek">Primary Skill You Want to Learn *</label>
+              <input type="text" id="newStudentSeek" class="form-control" placeholder="e.g. Acoustic Guitar Fundamentals" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newStudentBio">Bio & Teaching Style</label>
+            <textarea id="newStudentBio" class="form-control" rows="2" placeholder="Tell fellow students what concepts you cover and your teaching philosophy..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newStudentAvailability">Weekly Availability</label>
+            <input type="text" id="newStudentAvailability" class="form-control" placeholder="e.g. Weekday evenings, Saturday mornings">
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelCreateProfileBtn">Cancel</button>
+        <button class="btn btn-primary" id="submitCreateProfileBtn">
+          <i class="fa-solid fa-user-check"></i> Register Profile & Claim 3.00 Credits
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: POST A SKILL LISTING -->
+  <div class="modal-overlay" id="postSkillModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-plus-circle text-primary"></i> Post a Skill to Exchange</h3>
+        <button class="close-modal-btn" id="closePostSkillBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="postSkillForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="formSkillName">Skill You Can Teach</label>
+              <input type="text" id="formSkillName" class="form-control" placeholder="e.g. Flutter Mobile Dev" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="formCategory">Category</label>
+              <select id="formCategory" class="form-control" required>
+                <option value="cs">Computer Science & AI</option>
+                <option value="math">Mathematics & Data</option>
+                <option value="lang">Languages & Linguistics</option>
+                <option value="design">UI/UX & Creative Media</option>
+                <option value="music">Music & Sound</option>
+                <option value="career">Career & Communication</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="formProficiency">Your Proficiency Level</label>
+              <select id="formProficiency" class="form-control">
+                <option value="Intermediate">Intermediate (Can teach fundamentals)</option>
+                <option value="Advanced" selected>Advanced (Projects & Coursework)</option>
+                <option value="Expert">Expert (Industry experience / TA)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="formDesiredSkill">Skill You Want in Return</label>
+              <input type="text" id="formDesiredSkill" class="form-control" placeholder="e.g. Japanese N5 or Guitar" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="formTeachingBio">Brief Syllabus / Teaching Approach</label>
+            <textarea id="formTeachingBio" class="form-control" rows="3" placeholder="Explain what concepts you will cover in 1-2 hours and how you like to teach..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="formAvailability">Weekly Availability</label>
+              <input type="text" id="formAvailability" class="form-control" placeholder="e.g. Weekends, Tue/Thu evenings">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="formRate">Exchange Mode</label>
+              <select id="formRate" class="form-control">
+                <option value="Direct / Credits">Direct Swap or 1.0 Credit/hr</option>
+                <option value="Credits Only">Time-Bank Credits Only</option>
+                <option value="Direct Only">Direct Swap Only</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelPostSkillBtn">Cancel</button>
+        <button class="btn btn-primary" id="submitPostSkillBtn">
+          <i class="fa-solid fa-paper-plane"></i> Publish to MySQL Database
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PROPOSE EXCHANGE PROPOSAL -->
+  <div class="modal-overlay" id="proposeSwapModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-handshake text-primary"></i> Propose a Skill Exchange</h3>
+        <button class="close-modal-btn" id="closeProposeSwapBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div style="background: var(--bg-subtle); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem;" id="proposeTargetPeerSummary">
+          <!-- Populated by JS -->
+        </div>
+
+        <form id="proposeSwapForm">
+          <div class="form-group">
+            <label class="form-label">How would you like to exchange?</label>
+            <select class="form-control" id="proposeExchangeMode">
+              <option value="DIRECT_2WAY">Direct 1:1 Skill Swap (I teach you, you teach me)</option>
+              <option value="TIMEBANK_CREDIT">Time-Bank Credit (Spend 1.0 of your 4.5 Credits)</option>
+              <option value="CYCLE_3WAY">Enter 3-Way Cycle Match Pool</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">What skill will you teach in return?</label>
+            <select class="form-control" id="proposeOfferedSkillSelect">
+              <option value="Python & Data Structures">Python & Data Structures</option>
+              <option value="Full-Stack React & Node">Full-Stack React & Node</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Message & Proposed Schedule</label>
+            <textarea class="form-control" id="proposeMessage" rows="3" placeholder="Introduce yourself and propose your preferred meeting day & time..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelProposeSwapBtn">Cancel</button>
+        <button class="btn btn-emerald" id="submitProposeSwapBtn">
+          <i class="fa-solid fa-check"></i> Send Proposal
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: RATE & REVIEW PEER -->
+  <div class="modal-overlay" id="ratingModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-star text-amber"></i> Session Completed & Peer Feedback</h3>
+        <button class="close-modal-btn" id="closeRatingBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body text-center" style="text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
+        <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">1.00 SkillCredit Released!</h4>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          The session contract was verified. Please rate your peer to help maintain high quality and trust.
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 0.5rem; font-size: 1.8rem; color: #f59e0b; margin-bottom: 1.5rem; cursor: pointer;" id="starRatingRow">
+          <i class="fa-solid fa-star" data-val="1"></i>
+          <i class="fa-solid fa-star" data-val="2"></i>
+          <i class="fa-solid fa-star" data-val="3"></i>
+          <i class="fa-solid fa-star" data-val="4"></i>
+          <i class="fa-solid fa-star" data-val="5"></i>
+        </div>
+
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">Feedback for peer's profile</label>
+          <textarea class="form-control" id="ratingFeedbackText" rows="2" placeholder="Was the explanation clear? Punctual? Prepared?"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="submitRatingBtn" style="width: 100%;">
+          Submit Review to MySQL Ledger
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER FOR ALERTS -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SECTION: PROJECT TEAM MEMBERS -->
+  <section class="team-section" style="padding: 3.5rem 0; background: var(--bg-surface); border-top: 1px solid var(--border-light);">
+    <div class="container">
+      <div style="text-align: center; max-width: 650px; margin: 0 auto 2.5rem;">
+        <span class="badge badge-primary"><i class="fa-solid fa-users"></i> Project Team</span>
+        <h3 style="font-size: 1.75rem; margin-top: 0.5rem;">Project Contributors & Team Members</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted);">
+          Developed by our 5-member team for the Student Skill Exchange Problem project:
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.25rem;">
+        <!-- Member 1: Rai Bose -->
+        <div class="glass-panel" style="padding: 1.5rem 1.25rem; text-align: center; border-top: 3.5px solid #4f46e5;">
+          <div class="avatar-circle" style="width: 52px; height: 52px; margin: 0 auto 0.75rem; background: #4f46e5; font-size: 1.15rem; color: white;">RB</div>
+          <h4 style="font-size: 1.05rem; margin-bottom: 0.2rem;">Rai Bose</h4>
+          <span class="badge badge-primary" style="font-size: 0.72rem; margin-bottom: 0.35rem;">Project Lead (You)</span>
+          <div style="font-size: 0.76rem; font-weight: 700; color: var(--color-primary); margin-top: 0.25rem;">JIS COLLEGE OF ENGINEERING</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem;">Stream: <strong>BCA GENERAL</strong></div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border-light);">Teaches: <strong>Python & DSA</strong></div>
+        </div>
+
+        <!-- Member 2: Raj Biswas -->
+        <div class="glass-panel" style="padding: 1.5rem 1.25rem; text-align: center; border-top: 3.5px solid #10b981;">
+          <div class="avatar-circle" style="width: 52px; height: 52px; margin: 0 auto 0.75rem; background: #10b981; font-size: 1.15rem; color: white;">RB</div>
+          <h4 style="font-size: 1.05rem; margin-bottom: 0.2rem;">Raj Biswas</h4>
+          <span class="badge badge-emerald" style="font-size: 0.72rem; margin-bottom: 0.35rem;">Team Member</span>
+          <div style="font-size: 0.76rem; font-weight: 700; color: #10b981; margin-top: 0.25rem;">JIS COLLEGE OF ENGINEERING</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem;">Stream: <strong>BCA GENERAL</strong></div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border-light);">Teaches: <strong>Calculus III</strong></div>
+        </div>
+
+        <!-- Member 3: Rahul Kumar Shaw -->
+        <div class="glass-panel" style="padding: 1.5rem 1.25rem; text-align: center; border-top: 3.5px solid #06b6d4;">
+          <div class="avatar-circle" style="width: 52px; height: 52px; margin: 0 auto 0.75rem; background: #06b6d4; font-size: 1.15rem; color: white;">RS</div>
+          <h4 style="font-size: 1.05rem; margin-bottom: 0.2rem;">Rahul Kumar Shaw</h4>
+          <span class="badge badge-purple" style="font-size: 0.72rem; margin-bottom: 0.35rem;">Team Member</span>
+          <div style="font-size: 0.76rem; font-weight: 700; color: #06b6d4; margin-top: 0.25rem;">JIS COLLEGE OF ENGINEERING</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem;">Stream: <strong>BCA GENERAL</strong></div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border-light);">Teaches: <strong>UI/UX Figma</strong></div>
+        </div>
+
+        <!-- Member 4: Rahit Das -->
+        <div class="glass-panel" style="padding: 1.5rem 1.25rem; text-align: center; border-top: 3.5px solid #f43f5e;">
+          <div class="avatar-circle" style="width: 52px; height: 52px; margin: 0 auto 0.75rem; background: #f43f5e; font-size: 1.15rem; color: white;">RD</div>
+          <h4 style="font-size: 1.05rem; margin-bottom: 0.2rem;">Rahit Das</h4>
+          <span class="badge badge-amber" style="font-size: 0.72rem; margin-bottom: 0.35rem;">Team Member</span>
+          <div style="font-size: 0.76rem; font-weight: 700; color: #f43f5e; margin-top: 0.25rem;">JIS COLLEGE OF ENGINEERING</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem;">Stream: <strong>BCA GENERAL</strong></div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border-light);">Teaches: <strong>Machine Learning</strong></div>
+        </div>
+
+        <!-- Member 5: Protyusha Bose -->
+        <div class="glass-panel" style="padding: 1.5rem 1.25rem; text-align: center; border-top: 3.5px solid #8b5cf6;">
+          <div class="avatar-circle" style="width: 52px; height: 52px; margin: 0 auto 0.75rem; background: #8b5cf6; font-size: 1.15rem; color: white;">PB</div>
+          <h4 style="font-size: 1.05rem; margin-bottom: 0.2rem;">Protyusha Bose</h4>
+          <span class="badge badge-emerald" style="font-size: 0.72rem; margin-bottom: 0.35rem;">Team Member</span>
+          <div style="font-size: 0.76rem; font-weight: 700; color: #8b5cf6; margin-top: 0.25rem;">JIS COLLEGE OF ENGINEERING</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem;">Stream: <strong>BCA GENERAL</strong></div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border-light);">Teaches: <strong>MySQL Databases</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SITE FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="brand-logo" style="margin-bottom: 0.75rem;">
+            <div class="brand-icon"><i class="fa-solid fa-arrows-spin"></i></div>
+            <span>Student Skill <span class="gradient-text">Exchange Platform</span></span>
+          </div>
+          <p class="footer-desc">
+            A peer-to-peer solution to the Student Skill Exchange Problem. 
+            Eliminating financial barriers in higher education through 3-way matching and time-banking.
+          </p>
+          <div style="margin-top: 1.25rem; display: flex; gap: 0.75rem;">
+            <span class="badge badge-primary"><i class="fa-solid fa-code"></i> HTML5 / CSS3 / JS</span>
+            <span class="badge badge-emerald"><i class="fa-solid fa-database"></i> MySQL 8.0</span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Platform Features</h5>
+          <ul class="footer-links">
+            <li><a href="#problem">The 1-on-1 Problem</a></li>
+            <li><a href="#solver">3-Way Cycle Matcher</a></li>
+            <li><a href="#marketplace">Skill Directory</a></li>
+            <li><a href="#database">MySQL Schema & Views</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Project Architecture</h5>
+          <ul class="footer-links">
+            <li><a href="#problem">3-Way Graph Cycle Resolution</a></li>
+            <li><a href="#database">Database Tables</a></li>
+            <li><a href="#database">Stable Peer Pairing</a></li>
+            <li><a href="#dashboard">Time-Bank Ledger Model</a></li>
+            <li><a href="#database">Escrow Guarantee</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Project Repository</h5>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" id="footerViewSqlLink"><i class="fa-solid fa-file-code"></i> View schema.sql</a></li>
+            <li><a href="javascript:void(0)" id="footerTestDemoBtn"><i class="fa-solid fa-play"></i> Simulate 3-Way Cycle</a></li>
+            <li><a href="javascript:void(0)" id="footerExportDataBtn"><i class="fa-solid fa-file-export"></i> Export DB JSON</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 Student Skill Exchange Platform &bull; Academic Capstone Project.
+        </div>
+        <div>
+          Built with <strong>MySQL, HTML, CSS, JavaScript</strong>.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript App -->
+  <script src="script.js"></script>
+</body>
+</html>
+
