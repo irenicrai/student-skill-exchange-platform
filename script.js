@@ -1239,22 +1239,29 @@ function initModals() {
 
   // Mobile menu toggle
   const mobileBtn = document.getElementById("mobileMenuBtn");
-  if (mobileBtn) {
+  const navLinks = document.querySelector(".nav-links");
+  if (mobileBtn && navLinks) {
     mobileBtn.addEventListener("click", () => {
-      const navLinks = document.querySelector(".nav-links");
-      if (navLinks.style.display === "flex") {
-        navLinks.style.display = "none";
-      } else {
-        navLinks.style.display = "flex";
-        navLinks.style.flexDirection = "column";
-        navLinks.style.position = "absolute";
-        navLinks.style.top = "72px";
-        navLinks.style.left = "0";
-        navLinks.style.width = "100%";
-        navLinks.style.background = "var(--bg-surface)";
-        navLinks.style.padding = "1.5rem";
-        navLinks.style.boxShadow = "var(--shadow-xl)";
-      }
+      const isOpen = navLinks.style.display === "flex";
+      navLinks.style.display = isOpen ? "none" : "flex";
+      navLinks.style.flexDirection = "column";
+      navLinks.style.position = "absolute";
+      navLinks.style.top = "64px";
+      navLinks.style.left = "0";
+      navLinks.style.width = "100%";
+      navLinks.style.background = "var(--bg-surface-elevated, var(--bg-surface))";
+      navLinks.style.padding = "1.25rem";
+      navLinks.style.boxShadow = "var(--shadow-xl)";
+      navLinks.style.zIndex = "1000";
+    });
+
+    // Auto-close mobile drawer when any navigation link is clicked
+    navLinks.querySelectorAll(".nav-link").forEach(link => {
+      link.addEventListener("click", () => {
+        if (window.innerWidth <= 768) {
+          navLinks.style.display = "none";
+        }
+      });
     });
   }
 }

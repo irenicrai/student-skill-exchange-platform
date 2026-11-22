@@ -137,6 +137,7 @@ body.dark-theme .speaker-hint-box strong {
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  overflow-x: hidden;
 }
 
 body {
@@ -2199,12 +2200,30 @@ body.dark-theme .trade-label.learn {
 
   .nav-wrapper {
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .brand-logo {
+    gap: 0.5rem;
+  }
+
+  .brand-logo span {
+    font-size: 0.98rem;
+    font-weight: 700;
+  }
+
+  .brand-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 0.95rem;
   }
 
   .nav-links {
     display: none;
     position: absolute;
-    top: 100%;
+    top: calc(100% + 12px);
     left: 0;
     width: 100%;
     background: var(--bg-surface-elevated);
@@ -2214,7 +2233,7 @@ body.dark-theme .trade-label.learn {
     padding: 1.25rem;
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75rem;
+    gap: 0.5rem;
     z-index: 1000;
   }
 
@@ -2222,7 +2241,8 @@ body.dark-theme .trade-label.learn {
     display: block;
     padding: 0.75rem 1rem;
     border-radius: var(--radius-md);
-    font-size: 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
   }
 
   .nav-link:hover,
@@ -2238,59 +2258,73 @@ body.dark-theme .trade-label.learn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
     border-radius: var(--radius-md);
     background: var(--bg-subtle);
     border: 1px solid var(--border-light);
     color: var(--text-main);
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     cursor: pointer;
   }
 
-  .brand-logo span {
-    font-size: 1.05rem;
-  }
-
-  .brand-icon {
-    width: 34px;
-    height: 34px;
-    font-size: 1rem;
-  }
-
-  /* Compact Navbar Actions */
+  /* Compact Navbar Actions: Hide non-essential buttons from top header bar */
   .nav-actions {
-    gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
   }
 
+  #openCreateProfileBtn,
+  #openPostSkillBtn,
   #toggleSpeakerNotesBtn {
-    display: none; /* Hide presentation cues on mobile to save precious screen header space */
+    display: none !important; /* Kept clean in header; accessible via hero buttons and drawer */
+  }
+
+  .credit-pill {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.78rem;
+    gap: 0.35rem;
+  }
+
+  .theme-toggle-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
   }
 
   /* Hero Section */
   .hero-section {
-    padding: 2.5rem 0 2rem;
+    padding: 2rem 0 1.5rem;
   }
 
   .hero-badge-wrap {
     flex-wrap: wrap;
-    gap: 0.4rem;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-badge-wrap .badge {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.65rem;
   }
 
   .hero-title {
-    font-size: 2.15rem;
+    font-size: 1.85rem;
     line-height: 1.25;
+    margin-bottom: 0.85rem;
   }
 
   .hero-subtitle {
-    font-size: 0.98rem;
-    margin-bottom: 1.5rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    margin-bottom: 1.25rem;
   }
 
   .hero-actions {
     flex-direction: column;
     width: 100%;
-    gap: 0.75rem;
+    gap: 0.65rem;
   }
 
   .hero-actions .btn {
@@ -2299,19 +2333,76 @@ body.dark-theme .trade-label.learn {
   }
 
   /* Quick Match Hero Widget */
-  .quick-match-inputs {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+  .hero-quick-match {
+    padding: 1.25rem;
   }
 
-  .quick-match-inputs .swap-icon-btn,
-  .quick-match-inputs i.fa-arrows-left-right {
+  .quick-match-inputs {
+    grid-template-columns: 1fr !important;
+    gap: 0.65rem;
+  }
+
+  .swap-indicator-icon {
     display: none;
   }
 
   .quick-match-inputs .btn {
     width: 100%;
     justify-content: center;
+    margin-top: 0.25rem;
+  }
+
+  /* Hero Stats Metrics Bar */
+  .hero-stats {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem;
+    padding-top: 1.25rem;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 1.45rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  /* Hero Visual 3-Way Cycle Showcase */
+  .hero-visual-card {
+    padding: 1.25rem;
+  }
+
+  .cycle-preview-canvas {
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+  }
+
+  .cycle-preview-canvas .cycle-svg-arrows {
+    display: none !important;
+  }
+
+  .cycle-preview-canvas .cycle-node {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    transform: none !important;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .cycle-resolution-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+    font-size: 0.78rem;
   }
 
   /* Cycle Solver & Matching Layouts */
@@ -2325,56 +2416,113 @@ body.dark-theme .trade-label.learn {
     justify-content: center;
   }
 
-  .direct-match-layout {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1.5rem;
-  }
-
-  .credit-token-layout {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .token-balance-showcase {
-    padding: 1.5rem;
-  }
-
-  .cycle-nodes-row {
+  .results-header {
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
   }
 
-  /* Skill Marketplace */
-  .filters-bar {
+  .matching-modes-tabs {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .mode-tab-btn {
+    flex: 1;
+    text-align: center;
+    font-size: 0.78rem;
+    padding: 0.45rem 0.5rem;
+    justify-content: center;
+  }
+
+  /* 3-Way Interactive Canvas Graph Mobile Stack */
+  .cycle-canvas-container {
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+  }
+
+  .cycle-canvas-container svg {
+    display: none !important;
+  }
+
+  .cycle-step-card {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    transform: none !important;
+  }
+
+  .direct-match-layout {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75rem;
+    gap: 1.25rem;
   }
 
-  .filters-bar .search-box,
-  .filters-bar select,
-  .filters-bar .btn {
-    width: 100%;
+  .peer-card-match {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
-  .skills-grid {
+  .credit-token-layout {
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
 
-  .skill-card {
-    padding: 1.35rem;
+  .token-balance-showcase {
+    padding: 1.25rem;
   }
 
-  .skill-card-footer {
+  /* Marketplace & Student Directory */
+  .market-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+  }
+
+  .category-pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .category-pill {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.76rem;
+  }
+
+  .search-box-market {
+    width: 100% !important;
+  }
+
+  .market-search-input {
+    width: 100% !important;
+  }
+
+  .market-search-input:focus {
+    width: 100% !important;
+  }
+
+  /* Students Grid: Single column on mobile to eliminate horizontal overflow */
+  .students-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem;
+  }
+
+  .student-card {
+    padding: 1.25rem;
+  }
+
+  .student-card-footer {
     flex-direction: column;
     align-items: stretch;
     gap: 0.75rem;
   }
 
-  .skill-card-footer .btn {
+  .student-card-footer .btn {
     width: 100%;
     justify-content: center;
   }
@@ -2384,7 +2532,13 @@ body.dark-theme .trade-label.learn {
     flex-direction: column;
     align-items: stretch;
     gap: 1.25rem;
-    padding: 1.35rem;
+    padding: 1.25rem;
+  }
+
+  .dash-profile-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
   }
 
   .dash-wallet-summary {
@@ -2393,9 +2547,18 @@ body.dark-theme .trade-label.learn {
     width: 100%;
   }
 
-  .dash-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+  .dash-tabs-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    gap: 0.5rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .dash-tab-item {
+    flex-shrink: 0;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.85rem;
   }
 
   /* Responsive Horizontal Scroll Tables */
@@ -2406,22 +2569,11 @@ body.dark-theme .trade-label.learn {
   }
 
   .algo-table {
-    min-width: 580px;
-    font-size: 0.82rem;
+    min-width: 540px;
+    font-size: 0.80rem;
   }
 
   /* MySQL Schema Explorer */
-  .category-pill-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .category-pill {
-    padding: 0.35rem 0.75rem;
-    font-size: 0.78rem;
-  }
-
   .sql-terminal {
     padding: 1rem;
     font-size: 0.8rem;
@@ -2435,7 +2587,7 @@ body.dark-theme .trade-label.learn {
 
   /* Modal Dialogs */
   .modal-overlay {
-    padding: 1rem;
+    padding: 0.75rem;
   }
 
   .modal-window {
@@ -2444,20 +2596,20 @@ body.dark-theme .trade-label.learn {
   }
 
   .modal-header {
-    padding: 1.25rem 1.25rem;
+    padding: 1.15rem 1.15rem;
   }
 
   .modal-body {
-    padding: 1.25rem;
+    padding: 1.15rem;
   }
 
   .form-row {
     grid-template-columns: 1fr;
-    gap: 0.85rem;
+    gap: 0.75rem;
   }
 
   .modal-footer {
-    padding: 1rem 1.25rem;
+    padding: 1rem 1.15rem;
     flex-direction: column-reverse;
     gap: 0.5rem;
   }
@@ -2476,7 +2628,7 @@ body.dark-theme .trade-label.learn {
   .footer-bottom {
     flex-direction: column;
     text-align: center;
-    gap: 0.85rem;
+    gap: 0.75rem;
   }
 }
 
@@ -2486,49 +2638,36 @@ body.dark-theme .trade-label.learn {
     padding: 0 1rem;
   }
 
-  /* Brand and Header Adjustments */
   .brand-logo span {
-    font-size: 0.92rem;
+    font-size: 0.88rem;
   }
 
   .brand-tag {
     display: none;
   }
 
-  #openCreateProfileBtn {
-    display: none; /* Accessible directly via mobile drawer menu */
-  }
-
-  #openPostSkillBtn {
-    padding: 0.38rem 0.65rem;
-    font-size: 0.76rem;
-  }
-
   .credit-pill {
-    padding: 0.32rem 0.58rem;
-    font-size: 0.75rem;
+    padding: 0.28rem 0.5rem;
+    font-size: 0.72rem;
   }
 
-  /* Hero Title & Text Scaling */
   .hero-title {
-    font-size: 1.75rem;
+    font-size: 1.65rem;
     line-height: 1.22;
   }
 
   .hero-subtitle {
-    font-size: 0.90rem;
+    font-size: 0.88rem;
     line-height: 1.5;
   }
 
-  .hero-metrics {
-    grid-template-columns: 1fr;
+  .hero-stats {
+    grid-template-columns: 1fr 1fr !important;
     gap: 0.75rem;
   }
 
-  /* Single Column Dashboard Stats */
-  .dash-stats-grid {
-    grid-template-columns: 1fr;
-    gap: 0.85rem;
+  .stat-number {
+    font-size: 1.3rem;
   }
 
   /* Mobile Touch Targets & iOS Auto-Zoom Prevention */
@@ -2542,24 +2681,22 @@ body.dark-theme .trade-label.learn {
     min-height: 44px; /* Accessible minimum touch target size */
   }
 
-  /* Section Title Spacing */
   .section-header {
-    margin-bottom: 2rem;
+    margin-bottom: 1.75rem;
   }
 
   .section-title {
-    font-size: 1.65rem;
+    font-size: 1.5rem;
   }
 
   .section-subtitle {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
   }
 
-  /* Toast Notification Positioning */
   .toast-container {
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
   }
 
   .toast {
