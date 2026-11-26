@@ -1578,8 +1578,8 @@ body.dark-theme .trade-label.learn {
 
 .classroom-body-grid {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  height: 480px;
+  grid-template-columns: 330px 1fr;
+  min-height: 540px;
 }
 
 .peer-video-sidebar {
@@ -1591,35 +1591,95 @@ body.dark-theme .trade-label.learn {
   gap: 1rem;
 }
 
-.video-frame-mock {
+/* Video Feed Containers */
+.video-frame-wrap {
   position: relative;
   background: #0f172a;
   border-radius: var(--radius-md);
-  height: 180px;
+  height: 175px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1.5px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.video-avatar-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.video-status-tag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(15, 23, 42, 0.75);
+  color: white;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  backdrop-filter: blur(4px);
+  z-index: 2;
 }
 
 .video-peer-name {
   position: absolute;
   bottom: 8px;
   left: 8px;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.75);
   color: white;
-  padding: 0.15rem 0.5rem;
+  padding: 0.2rem 0.6rem;
   border-radius: var(--radius-sm);
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 600;
+  backdrop-filter: blur(4px);
+  z-index: 2;
 }
 
-.video-audio-wave {
+.video-audio-pulse {
   position: absolute;
   top: 8px;
   right: 8px;
-  color: #10b981;
-  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 16px;
+  padding: 2px 6px;
+  background: rgba(16, 185, 129, 0.25);
+  border-radius: var(--radius-full);
+  z-index: 2;
+}
+
+.audio-bar {
+  width: 3px;
+  height: 10px;
+  background: #10b981;
+  border-radius: 2px;
+  animation: audioWave 1s ease-in-out infinite alternate;
+}
+.audio-bar:nth-child(2) { height: 14px; animation-delay: 0.2s; }
+.audio-bar:nth-child(3) { height: 8px; animation-delay: 0.4s; }
+
+@keyframes audioWave {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1.2); }
 }
 
 .session-topic-box {
@@ -1630,9 +1690,12 @@ body.dark-theme .trade-label.learn {
   font-size: 0.8rem;
 }
 
+/* Collaborative Workspace Area */
 .classroom-collab-area {
   display: flex;
   flex-direction: column;
+  background: var(--bg-surface);
+  min-height: 540px;
 }
 
 .collab-toolbar {
@@ -1642,27 +1705,185 @@ body.dark-theme .trade-label.learn {
   justify-content: space-between;
   align-items: center;
   background: var(--bg-surface);
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .collab-tab-btns {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
+  flex-wrap: wrap;
 }
 
 .collab-tab {
-  padding: 0.35rem 0.85rem;
+  padding: 0.4rem 0.85rem;
   font-size: 0.82rem;
   font-weight: 600;
   border-radius: var(--radius-sm);
-  border: none;
+  border: 1px solid transparent;
   background: transparent;
   color: var(--text-muted);
   cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.collab-tab:hover {
+  background: var(--bg-subtle);
+  color: var(--text-main);
 }
 
 .collab-tab.active {
   background: var(--primary-light);
   color: var(--primary);
+  border-color: rgba(79, 70, 229, 0.25);
+}
+
+/* Whiteboard Pane */
+.whiteboard-pane {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-main);
+  position: relative;
+}
+
+.whiteboard-toolbar {
+  padding: 0.5rem 1rem;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.whiteboard-tool-group {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.wb-color-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+.wb-color-btn.active {
+  border-color: var(--primary);
+  transform: scale(1.2);
+  box-shadow: 0 0 6px var(--primary-glow);
+}
+
+.whiteboard-canvas-el {
+  flex-grow: 1;
+  width: 100%;
+  height: 400px;
+  cursor: crosshair;
+  background: #ffffff;
+  touch-action: none;
+}
+
+body.dark-theme .whiteboard-canvas-el {
+  background: #111827;
+}
+
+/* Code Sandbox Pane */
+.code-sandbox-pane {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background: #0f172a;
+}
+
+.code-editor-header {
+  padding: 0.6rem 1rem;
+  background: #1e293b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #cbd5e1;
+  font-size: 0.82rem;
+  font-family: var(--font-mono);
+}
+
+.code-editor-textarea {
+  width: 100%;
+  height: 280px;
+  padding: 1rem;
+  background: #0f172a;
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+.code-output-terminal {
+  border-top: 1px solid #334155;
+  padding: 0.85rem 1rem;
+  background: #090d16;
+  color: #a7f3d0;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  height: 120px;
+  overflow-y: auto;
+}
+
+/* In-Call Student Chat Pane */
+.call-chat-pane {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-surface);
+}
+
+.call-chat-messages {
+  flex-grow: 1;
+  height: 320px;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 0.65rem 0.95rem;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.chat-bubble-peer {
+  align-self: flex-start;
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  border-bottom-left-radius: 2px;
+}
+
+.chat-bubble-self {
+  align-self: flex-end;
+  background: var(--primary);
+  color: white;
+  border-bottom-right-radius: 2px;
+}
+
+.call-chat-input-bar {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  gap: 0.5rem;
+  background: var(--bg-surface);
 }
 
 .notes-editor-pane {
@@ -1676,8 +1897,10 @@ body.dark-theme .trade-label.learn {
   border: none;
   outline: none;
   resize: none;
+  min-height: 380px;
 }
 
+/* Classroom Bottom Call Controls Bar */
 .classroom-bottom-bar {
   padding: 1rem 1.5rem;
   border-top: 1px solid var(--border-light);
@@ -1685,6 +1908,55 @@ body.dark-theme .trade-label.learn {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.call-controls-cluster {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.call-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.call-btn-default {
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  border: 1.5px solid var(--border-light);
+}
+
+.call-btn-default:hover {
+  background: var(--border-light);
+  transform: translateY(-2px);
+}
+
+.call-btn-active {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+.call-btn-muted {
+  background: #fee2e2;
+  color: #ef4444;
+  border-color: #fca5a5;
+}
+
+body.dark-theme .call-btn-muted {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
 }
 
 /* ===================================================================
@@ -2193,6 +2465,7 @@ body.dark-theme .trade-label.learn {
 
 /* Tablets Portrait & Mobile Devices (<= 768px) */
 @media (max-width: 768px) {
+
   /* Navigation Bar Mobile Layout */
   .navbar {
     padding: 0.65rem 0;
@@ -2278,7 +2551,8 @@ body.dark-theme .trade-label.learn {
   #openCreateProfileBtn,
   #openPostSkillBtn,
   #toggleSpeakerNotesBtn {
-    display: none !important; /* Kept clean in header; accessible via hero buttons and drawer */
+    display: none !important;
+    /* Kept clean in header; accessible via hero buttons and drawer */
   }
 
   .credit-pill {
@@ -2674,11 +2948,13 @@ body.dark-theme .trade-label.learn {
   input,
   select,
   textarea {
-    font-size: 16px !important; /* Prevents unwanted auto-zooming on iOS Safari */
+    font-size: 16px !important;
+    /* Prevents unwanted auto-zooming on iOS Safari */
   }
 
   .btn {
-    min-height: 44px; /* Accessible minimum touch target size */
+    min-height: 44px;
+    /* Accessible minimum touch target size */
   }
 
   .section-header {

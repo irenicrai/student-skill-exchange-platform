@@ -226,6 +226,7 @@ function initializeApp() {
   initCategoryFilters();
   initSearch();
   initFooterActions();
+  initClassroom();
 }
 
 if (document.readyState === "loading") {
@@ -1217,7 +1218,14 @@ function initModals() {
   if (closeRatingBtn) closeRatingBtn.addEventListener("click", () => ratingModal.classList.remove("open"));
   submitRatingBtn.addEventListener("click", () => {
     ratingModal.classList.remove("open");
-    showToast("Feedback and 5-Star Rating permanently saved to reviews_ratings table!", "success");
+    DB.currentUser.credit_balance += 1.0;
+    DB.currentUser.total_hours_taught += 1.0;
+    updateCreditDisplays();
+    if (typeof confetti === "function") {
+      confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
+    }
+    showToast("Feedback and 5-Star Rating permanently saved to reviews_ratings table! +1.00 Credit released from escrow.", "success");
+    renderDashboard("activeSwaps");
   });
 
   // Star click interactive
@@ -1350,4 +1358,708 @@ function showToast(message, type = "success") {
     setTimeout(() => toast.remove(), 300);
   }, 4000);
 }
+
+// =====================================================================
+// 8. LIVE PEER TUTORING & VIDEO CLASSROOM (WebRTC & Collab Workspace)
+// =====================================================================
+
+function initClassroom() {
+  const peerSelector = document.getElementById("classroomPeerSelector");
+  const sessionTitle = document.getElementById("classroomSessionTitle");
+  const callClock = document.getElementById("callSessionClock");
+  const remoteVideo = document.getElementById("remoteVideoElement");
+  const remoteAvatar = document.getElementById("remoteAvatarFallback");
+  const remoteAvatarCircle = document.getElementById("remoteAvatarCircle");
+  const remotePeerNameDisplay = document.getElementById("remotePeerNameDisplay");
+  const remotePeerSkillDisplay = document.getElementById("remotePeerSkillDisplay");
+  const remotePeerTag = document.getElementById("remotePeerTag");
+
+  const localVideo = document.getElementById("localVideoElement");
+  const localAvatar = document.getElementById("localAvatarFallback");
+  const localCamStatus = document.getElementById("localCamStatusText");
+
+  const topicTitle = document.getElementById("classroomTopicTitle");
+  const topicDesc = document.getElementById("classroomTopicDesc");
+
+  const toggleMicBtn = document.getElementById("toggleCallMicBtn");
+  const toggleCamBtn = document.getElementById("toggleCallCamBtn");
+  const toggleScreenBtn = document.getElementById("toggleCallScreenBtn");
+  const toggleWbQuickBtn = document.getElementById("toggleWhiteboardQuickBtn");
+  const releaseEscrowBtn = document.getElementById("classroomReleaseEscrowBtn");
+
+  const codeEditor = document.getElementById("classroomCodeEditor");
+  const codeOutput = document.getElementById("classroomCodeOutput");
+  const runCodeBtn = document.getElementById("runClassroomCodeBtn");
+  const clearCodeBtn = document.getElementById("clearCodeOutputBtn");
+  const codeLangSelect = document.getElementById("codeLanguageSelect");
+
+  const wbCanvas = document.getElementById("whiteboardCanvas");
+  const wbBrushSize = document.getElementById("wbBrushSize");
+  const wbEraserBtn = document.getElementById("wbEraserBtn");
+  const wbClearBtn = document.getElementById("wbClearBtn");
+  const wbColorBtns = document.querySelectorAll(".wb-color-btn");
+
+  const chatMessages = document.getElementById("classroomChatMessages");
+  const chatInput = document.getElementById("classroomChatInput");
+  const sendChatBtn = document.getElementById("sendClassroomChatBtn");
+  const chatBadge = document.getElementById("chatBadgeCount");
+
+  const collabTabs = document.querySelectorAll(".collab-tab");
+  const collabPanes = {
+    code: document.getElementById("paneCode"),
+    whiteboard: document.getElementById("paneWhiteboard"),
+    notes: document.getElementById("paneNotes"),
+    chat: document.getElementById("paneChat")
+  };
+
+  // Peer configuration library
+  const peersData = {
+    "2": {
+      name: "Raj Biswas",
+      initials: "RB",
+      color: "#10b981",
+      tag: "Raj Biswas (JIS BCA '26)",
+      skill: "Multivariable Calculus III",
+      sessionTitle: "Python & DSA ⇄ Calculus III Exchange",
+      lessonTitle: "Multivariable Calculus: Gradient Vectors & Directional Derivatives",
+      lessonDesc: "Exchanging peer time: Rai teaches Python Data Structures (Binary Search) in return for Calculus III 3D gradient vector visual proofs.",
+      reply: "The divide-and-conquer logic makes total sense now! In exchange, I'll walk you through gradient vectors ∇f(x,y) and how they point in the direction of steepest ascent.",
+      code: `# =========================================================
+# JIS College of Engineering - BCA Peer Tutoring Session
+# Topic: Binary Search Algorithm & Time Complexity O(log n)
+# Tutor: Rai Bose • Peer: Raj Biswas
+# =========================================================
+
+def binary_search(arr, target):
+    """
+    Finds index of target in sorted array arr.
+    Time Complexity: O(log N) | Space Complexity: O(1)
+    """
+    low = 0
+    high = len(arr) - 1
+    steps = 0
+    
+    while low <= high:
+        steps += 1
+        mid = (low + high) // 2
+        print(f"Step {steps}: checking index {mid} -> value {arr[mid]}")
+        
+        if arr[mid] == target:
+            return mid, steps
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+            
+    return -1, steps
+
+# Test Dataset
+student_ids = [101, 104, 108, 115, 122, 137, 142, 150, 168, 180]
+search_target = 137
+
+print(f"Searching for Student ID {search_target} in {len(student_ids)} records...")
+idx, count = binary_search(student_ids, search_target)
+print(f"Result: Found at index {idx} in {count} iterations (O(log n) efficiency)!")
+`
+    },
+    "3": {
+      name: "Rahul Kumar Shaw",
+      initials: "RS",
+      color: "#06b6d4",
+      tag: "Rahul Kumar Shaw (JIS BCA '26)",
+      skill: "UI/UX Design with Figma",
+      sessionTitle: "Python & DSA ⇄ UI/UX Figma Design Exchange",
+      lessonTitle: "Figma Component Autolayout & Responsive Design Systems",
+      lessonDesc: "Exchanging peer time: Rai teaches Python algorithms in return for Figma auto-layout, token management, and micro-interactions.",
+      reply: "Hey Rai! I've set up the Figma autolayout frame. Notice how padding and gap properties mirror flexbox in CSS!",
+      code: `// =========================================================
+// JIS College of Engineering - BCA Peer Tutoring Session
+// Topic: Design Token Parser & Component Frame Sizer
+// Tutor: Rahul Kumar Shaw • Peer: Rai Bose
+// =========================================================
+
+const designTokens = {
+  colors: {
+    primary: "#4f46e5",
+    surface: "#ffffff",
+    border: "#e2e8f0"
+  },
+  spacing: {
+    xs: 4, sm: 8, md: 16, lg: 24, xl: 32
+  },
+  typography: {
+    fontFamily: "Inter, system-ui, sans-serif",
+    fontSizeBase: "14px"
+  }
+};
+
+function generateCSSCustomProperties(tokens) {
+  console.log("Parsing Figma Tokens into CSS Variables:");
+  for (const [key, value] of Object.entries(tokens.colors)) {
+    console.log(\`  --token-color-\${key}: \${value};\`);
+  }
+  console.log("Tokens synchronized to student theme engine successfully!");
+}
+
+generateCSSCustomProperties(designTokens);
+`
+    },
+    "4": {
+      name: "Rahit Das",
+      initials: "RD",
+      color: "#8b5cf6",
+      tag: "Rahit Das (JIS BCA '26)",
+      skill: "Machine Learning & PyTorch",
+      sessionTitle: "Python & DSA ⇄ Machine Learning & PyTorch",
+      lessonTitle: "PyTorch Neural Tensors & Backpropagation Computation Graph",
+      lessonDesc: "Exchanging peer time: Rai teaches Python DSA in return for PyTorch tensor manipulation, autograd, and GPU acceleration.",
+      reply: "Great implementation! Notice how PyTorch's backward() engine computes partial derivatives automatically across the computation graph.",
+      code: `# =========================================================
+# JIS College of Engineering - BCA Peer Tutoring Session
+# Topic: Linear Neuron Forward Pass & Loss Gradient
+# Tutor: Rahit Das • Peer: Rai Bose
+# =========================================================
+
+import math
+
+def forward_pass(x_inputs, weights, bias):
+    """Simulates linear layer activation y = w * x + b"""
+    z = sum(x * w for x, w in zip(x_inputs, weights)) + bias
+    # Sigmoid activation function
+    activation = 1.0 / (1.0 + math.exp(-z))
+    return z, activation
+
+inputs = [0.8, 0.4, 0.9]
+weights = [0.25, 0.75, 0.45]
+bias = -0.1
+
+z, a = forward_pass(inputs, weights, bias)
+print(f"Logit (z): {z:.4f}")
+print(f"Neuron Output Activation (a): {a:.4f}")
+print("Autograd gradient dLoss/dW calculated with zero divergence!")
+`
+    },
+    "5": {
+      name: "Protyusha Bose",
+      initials: "PB",
+      color: "#ec4899",
+      tag: "Protyusha Bose (JIS BCA '26)",
+      skill: "Database Systems & MySQL",
+      sessionTitle: "Python & DSA ⇄ MySQL Relational Architecture",
+      lessonTitle: "ACID Transactions, InnoDB Row Locks & SQL Query Optimization",
+      lessonDesc: "Exchanging peer time: Rai teaches Python DSA in return for MySQL 3NF relational normalization and index tuning.",
+      reply: "Checking your schema now, Rai! The foreign key constraints and compound index on (student_id, status) optimize lookup times significantly.",
+      code: `-- =========================================================
+-- JIS College of Engineering - BCA Peer Tutoring Session
+-- Topic: InnoDB Row-Level Locking & Escrow Transaction Verification
+-- Tutor: Protyusha Bose • Peer: Rai Bose
+-- =========================================================
+
+START TRANSACTION;
+
+-- Step 1: Verify current escrow balance
+SELECT escrow_id, sender_id, recipient_id, amount, status
+FROM credit_escrows
+WHERE escrow_id = 104 AND status = 'HELD'
+FOR UPDATE;
+
+-- Step 2: Transfer 1.00 SkillCredit
+UPDATE students 
+SET credit_balance = credit_balance + 1.00 
+WHERE student_id = 2; -- Raj Biswas
+
+-- Step 3: Complete escrow contract
+UPDATE credit_escrows 
+SET status = 'RELEASED', released_at = NOW() 
+WHERE escrow_id = 104;
+
+COMMIT;
+SELECT "Transaction committed with ACID compliance!" AS status;
+`
+    }
+  };
+
+  // --- 1. Live Session Clock ---
+  let elapsedSeconds = 868; // 14 mins 28 secs
+  setInterval(() => {
+    elapsedSeconds++;
+    const hrs = String(Math.floor(elapsedSeconds / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((elapsedSeconds % 3600) / 60)).padStart(2, '0');
+    const secs = String(elapsedSeconds % 60).padStart(2, '0');
+    if (callClock) {
+      callClock.textContent = `${hrs}:${mins}:${secs}`;
+    }
+  }, 1000);
+
+  // --- 2. WebRTC Live Camera / Mic Stream ---
+  let localStream = null;
+  let isMicMuted = false;
+  let isCamOff = false;
+  let isScreenSharing = false;
+
+  async function startWebcam() {
+    try {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        if (localVideo) {
+          localVideo.srcObject = localStream;
+          localVideo.style.display = "block";
+          if (localAvatar) localAvatar.style.display = "none";
+          localVideo.play().catch(e => console.log("Local video play notice:", e));
+        }
+        showToast("Webcam & microphone stream active (WebRTC)!", "success");
+      } else {
+        throw new Error("No mediaDevices");
+      }
+    } catch (err) {
+      console.log("Physical webcam unavailable, activating avatar mode:", err.message);
+      if (localVideo) localVideo.style.display = "none";
+      if (localAvatar) localAvatar.style.display = "flex";
+      if (localCamStatus) localCamStatus.textContent = "You (Avatar Mode)";
+    }
+  }
+
+  // Attempt initial start
+  startWebcam();
+
+  // Mic Toggle Button
+  if (toggleMicBtn) {
+    toggleMicBtn.addEventListener("click", () => {
+      isMicMuted = !isMicMuted;
+      if (localStream) {
+        localStream.getAudioTracks().forEach(track => track.enabled = !isMicMuted);
+      }
+      if (isMicMuted) {
+        toggleMicBtn.classList.remove("call-btn-default");
+        toggleMicBtn.classList.add("call-btn-muted");
+        toggleMicBtn.innerHTML = '<i class="fa-solid fa-microphone-slash"></i>';
+        showToast("Microphone muted.", "info");
+      } else {
+        toggleMicBtn.classList.remove("call-btn-muted");
+        toggleMicBtn.classList.add("call-btn-default");
+        toggleMicBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+        showToast("Microphone unmuted.", "success");
+      }
+    });
+  }
+
+  // Camera Toggle Button
+  if (toggleCamBtn) {
+    toggleCamBtn.addEventListener("click", () => {
+      isCamOff = !isCamOff;
+      if (localStream) {
+        localStream.getVideoTracks().forEach(track => track.enabled = !isCamOff);
+      }
+      if (isCamOff) {
+        toggleCamBtn.classList.remove("call-btn-default");
+        toggleCamBtn.classList.add("call-btn-muted");
+        toggleCamBtn.innerHTML = '<i class="fa-solid fa-video-slash"></i>';
+        if (localVideo) localVideo.style.display = "none";
+        if (localAvatar) localAvatar.style.display = "flex";
+        if (localCamStatus) localCamStatus.textContent = "You (Camera Off)";
+        showToast("Camera disabled. Showing profile avatar.", "info");
+      } else {
+        toggleCamBtn.classList.remove("call-btn-muted");
+        toggleCamBtn.classList.add("call-btn-default");
+        toggleCamBtn.innerHTML = '<i class="fa-solid fa-video"></i>';
+        if (localVideo && localStream) {
+          localVideo.style.display = "block";
+          if (localAvatar) localAvatar.style.display = "none";
+        }
+        if (localCamStatus) localCamStatus.textContent = "You (Host)";
+        showToast("Camera re-enabled.", "success");
+      }
+    });
+  }
+
+  // Screen Share Toggle Button
+  if (toggleScreenBtn) {
+    toggleScreenBtn.addEventListener("click", async () => {
+      if (!isScreenSharing) {
+        try {
+          if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+            const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+            if (localVideo) {
+              localVideo.srcObject = screenStream;
+              localVideo.style.display = "block";
+              if (localAvatar) localAvatar.style.display = "none";
+            }
+            isScreenSharing = true;
+            toggleScreenBtn.classList.add("call-btn-active");
+            showToast("Screen sharing started!", "success");
+
+            screenStream.getVideoTracks()[0].onended = () => {
+              isScreenSharing = false;
+              toggleScreenBtn.classList.remove("call-btn-active");
+              if (localStream && localVideo) localVideo.srcObject = localStream;
+              showToast("Screen sharing ended.", "info");
+            };
+          } else {
+            showToast("Screen sharing is supported via desktop browser window.", "info");
+          }
+        } catch (err) {
+          console.log("Screen share cancelled:", err);
+        }
+      } else {
+        isScreenSharing = false;
+        toggleScreenBtn.classList.remove("call-btn-active");
+        if (localStream && localVideo) localVideo.srcObject = localStream;
+        showToast("Screen sharing ended.", "info");
+      }
+    });
+  }
+
+  // Quick Switcher to Whiteboard Button in Call Bar
+  if (toggleWbQuickBtn) {
+    toggleWbQuickBtn.addEventListener("click", () => {
+      const wbTab = document.querySelector('.collab-tab[data-pane="whiteboard"]');
+      if (wbTab) wbTab.click();
+    });
+  }
+
+  // --- 3. Collaborative Tab Navigation ---
+  collabTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      collabTabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      const targetPane = tab.dataset.pane;
+      Object.keys(collabPanes).forEach(paneKey => {
+        if (collabPanes[paneKey]) {
+          collabPanes[paneKey].style.display = (paneKey === targetPane) ? "flex" : "none";
+        }
+      });
+      if (targetPane === "whiteboard") {
+        resizeWhiteboard();
+      }
+    });
+  });
+
+  // --- 4. Peer Connection Switcher ---
+  if (peerSelector) {
+    peerSelector.addEventListener("change", (e) => {
+      const peerId = e.target.value;
+      const peer = peersData[peerId] || peersData["2"];
+
+      if (sessionTitle) sessionTitle.textContent = peer.sessionTitle;
+      if (remotePeerNameDisplay) remotePeerNameDisplay.textContent = peer.name;
+      if (remotePeerSkillDisplay) remotePeerSkillDisplay.textContent = `Teaches: ${peer.skill}`;
+      if (remotePeerTag) remotePeerTag.textContent = peer.tag;
+      if (remoteAvatarCircle) {
+        remoteAvatarCircle.textContent = peer.initials;
+        remoteAvatarCircle.style.background = peer.color;
+        remoteAvatarCircle.style.boxShadow = `0 0 15px ${peer.color}80`;
+      }
+      if (topicTitle) topicTitle.textContent = peer.lessonTitle;
+      if (topicDesc) topicDesc.textContent = peer.lessonDesc;
+      if (codeEditor) codeEditor.value = peer.code;
+
+      // Append system message in chat
+      if (chatMessages) {
+        const sysNotice = document.createElement("div");
+        sysNotice.style.textAlign = "center";
+        sysNotice.style.fontSize = "0.74rem";
+        sysNotice.style.color = "var(--text-muted)";
+        sysNotice.style.margin = "0.5rem 0";
+        sysNotice.innerHTML = `<span><i class="fa-solid fa-link text-primary"></i> Switched active peer tutoring stream to <strong>${peer.name}</strong></span>`;
+        chatMessages.appendChild(sysNotice);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      showToast(`Connected peer feed switched to ${peer.name} (${peer.skill})!`, "success");
+    });
+  }
+
+  // --- 5. Code Sandbox Execution ---
+  if (codeLangSelect && codeEditor) {
+    codeLangSelect.addEventListener("change", (e) => {
+      const lang = e.target.value;
+      if (lang === "javascript") {
+        codeEditor.value = peersData["3"].code;
+      } else if (lang === "sql") {
+        codeEditor.value = peersData["5"].code;
+      } else {
+        codeEditor.value = peersData["2"].code;
+      }
+      showToast(`Loaded ${lang.toUpperCase()} template into workspace.`, "info");
+    });
+  }
+
+  if (runCodeBtn && codeOutput && codeEditor) {
+    runCodeBtn.addEventListener("click", () => {
+      codeOutput.innerHTML = '<span style="color: #38bdf8;"><i class="fa-solid fa-spinner fa-spin"></i> Executing script in sandbox environment...</span>';
+
+      setTimeout(() => {
+        const lang = codeLangSelect ? codeLangSelect.value : "python";
+        let outputHtml = "";
+
+        if (lang === "python") {
+          outputHtml = `
+<span style="color: #38bdf8;">[Runtime: Python 3.11.8 - Sandbox Execution Container]</span>
+<span style="color: #94a3b8;">----------------------------------------------------------------------</span>
+Searching for Student ID 137 in 10 records...
+Step 1: checking index 4 -&gt; value 122  (122 &lt; 137, searching right half)
+Step 2: checking index 7 -&gt; value 150  (150 &gt; 137, searching left half)
+Step 3: checking index 5 -&gt; value 137  (Match found!)
+<span style="color: #34d399; font-weight: 600;">Result: Found at index 5 in 3 iterations (O(log n) efficiency)!</span>
+<span style="color: #94a3b8;">----------------------------------------------------------------------</span>
+<span style="color: #a7f3d0;">✓ Process finished with exit code 0 (Elapsed time: 0.038ms)</span>
+<span style="color: #fde047;">★ Peer Verified: Algorithm test passed all boundary conditions!</span>`;
+        } else if (lang === "sql") {
+          outputHtml = `
+<span style="color: #38bdf8;">[Runtime: MySQL 8.0.35 InnoDB Engine - Transaction Log]</span>
+<span style="color: #94a3b8;">----------------------------------------------------------------------</span>
++-----------+-----------+--------------+--------+-----------+
+| escrow_id | sender_id | recipient_id | amount | status    |
++-----------+-----------+--------------+--------+-----------+
+| 104       | 1         | 2            | 1.00   | HELD      |
++-----------+-----------+--------------+--------+-----------+
+Query OK, 1 row affected (0.002 sec) - Row-level exclusive lock granted.
+Query OK, 1 row affected (0.001 sec) - Recipient balance updated: 5.50 CR.
+Query OK, 1 row affected (0.001 sec) - Escrow status changed to 'RELEASED'.
+<span style="color: #34d399; font-weight: 600;">✓ COMMIT successful. 0 deadlocks detected. Full ACID compliance maintained.</span>`;
+        } else {
+          outputHtml = `
+<span style="color: #38bdf8;">[Runtime: Node.js v20.10.0 (V8 Engine)]</span>
+<span style="color: #94a3b8;">----------------------------------------------------------------------</span>
+Parsing Figma Tokens into CSS Variables:
+  --token-color-primary: #4f46e5;
+  --token-color-surface: #ffffff;
+  --token-color-border: #e2e8f0;
+<span style="color: #34d399; font-weight: 600;">Tokens synchronized to student theme engine successfully!</span>
+<span style="color: #a7f3d0;">✓ Process exited cleanly with code 0</span>`;
+        }
+
+        codeOutput.innerHTML = outputHtml;
+        codeOutput.scrollTop = codeOutput.scrollHeight;
+        showToast("Code executed successfully! Shared with peer in real time.", "success");
+      }, 500);
+    });
+  }
+
+  if (clearCodeBtn && codeOutput) {
+    clearCodeBtn.addEventListener("click", () => {
+      codeOutput.innerHTML = '<span style="color: #64748b;">// Output terminal cleared. Click "Run Code" to execute...</span>';
+    });
+  }
+
+  // --- 6. Interactive Digital Whiteboard ---
+  let isDrawing = false;
+  let currentColor = "#4f46e5";
+  let currentLineWidth = 3;
+  let isEraser = false;
+
+  function resizeWhiteboard() {
+    if (!wbCanvas) return;
+    const rect = wbCanvas.getBoundingClientRect();
+    if (rect.width > 0 && wbCanvas.width !== Math.floor(rect.width)) {
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = wbCanvas.width;
+      tempCanvas.height = wbCanvas.height;
+      const tempCtx = tempCanvas.getContext("2d");
+      tempCtx.drawImage(wbCanvas, 0, 0);
+
+      wbCanvas.width = Math.floor(rect.width);
+      wbCanvas.height = 420;
+      const ctx = wbCanvas.getContext("2d");
+      ctx.drawImage(tempCanvas, 0, 0);
+    }
+  }
+
+  if (wbCanvas) {
+    const ctx = wbCanvas.getContext("2d");
+
+    // Initial starter doodle on whiteboard
+    function drawStarterDoodle() {
+      ctx.clearRect(0, 0, wbCanvas.width, wbCanvas.height);
+      ctx.strokeStyle = "#4f46e5";
+      ctx.fillStyle = "#4f46e5";
+      ctx.lineWidth = 2;
+      ctx.font = "bold 15px Inter, sans-serif";
+      ctx.fillText("Divide & Conquer: Binary Search Array Visualizer", 40, 45);
+
+      // Draw array boxes
+      const boxes = [101, 104, 108, 115, 122, 137, 142, 150, 168, 180];
+      const startX = 40;
+      const startY = 70;
+      const boxW = 55;
+      const boxH = 45;
+
+      boxes.forEach((num, i) => {
+        ctx.strokeStyle = (i === 5) ? "#10b981" : "#cbd5e1";
+        ctx.fillStyle = (i === 5) ? "#ecfdf5" : "#f8fafc";
+        ctx.lineWidth = (i === 5) ? 3 : 1.5;
+        ctx.fillRect(startX + i * boxW, startY, boxW, boxH);
+        ctx.strokeRect(startX + i * boxW, startY, boxW, boxH);
+
+        ctx.fillStyle = (i === 5) ? "#065f46" : "#334155";
+        ctx.font = "bold 13px Inter, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(String(num), startX + i * boxW + boxW / 2, startY + 28);
+      });
+
+      // Target indicator
+      ctx.fillStyle = "#10b981";
+      ctx.fillText("▲ Target: 137 (Index 5)", startX + 5 * boxW + boxW / 2, startY + boxH + 25);
+      ctx.textAlign = "left";
+
+      // Math notation for Calculus exchange
+      ctx.fillStyle = "#f59e0b";
+      ctx.font = "14px 'Fira Code', monospace";
+      ctx.fillText("Gradient Vector: ∇f(x, y) = [ ∂f/∂x, ∂f/∂y ]", 40, 190);
+      ctx.strokeStyle = "#f59e0b";
+      ctx.beginPath();
+      ctx.moveTo(40, 240);
+      ctx.lineTo(140, 210);
+      ctx.stroke();
+      ctx.fillText("Steepest Ascent Vector", 150, 215);
+    }
+
+    setTimeout(drawStarterDoodle, 100);
+
+    function getCoords(e) {
+      const rect = wbCanvas.getBoundingClientRect();
+      const scaleX = wbCanvas.width / rect.width;
+      const scaleY = wbCanvas.height / rect.height;
+      if (e.touches && e.touches[0]) {
+        return {
+          x: (e.touches[0].clientX - rect.left) * scaleX,
+          y: (e.touches[0].clientY - rect.top) * scaleY
+        };
+      }
+      return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top) * scaleY
+      };
+    }
+
+    function startDraw(e) {
+      isDrawing = true;
+      const { x, y } = getCoords(e);
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const { x, y } = getCoords(e);
+      ctx.lineWidth = currentLineWidth;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      if (isEraser) {
+        ctx.strokeStyle = document.body.classList.contains("dark-theme") ? "#111827" : "#ffffff";
+      } else {
+        ctx.strokeStyle = currentColor;
+      }
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+
+    function stopDraw() {
+      if (isDrawing) {
+        ctx.closePath();
+        isDrawing = false;
+      }
+    }
+
+    wbCanvas.addEventListener("mousedown", startDraw);
+    wbCanvas.addEventListener("mousemove", draw);
+    wbCanvas.addEventListener("mouseup", stopDraw);
+    wbCanvas.addEventListener("mouseleave", stopDraw);
+
+    wbCanvas.addEventListener("touchstart", (e) => { e.preventDefault(); startDraw(e); }, { passive: false });
+    wbCanvas.addEventListener("touchmove", (e) => { e.preventDefault(); draw(e); }, { passive: false });
+    wbCanvas.addEventListener("touchend", stopDraw);
+
+    wbColorBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        wbColorBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentColor = btn.dataset.color;
+        isEraser = false;
+        if (wbEraserBtn) wbEraserBtn.classList.remove("active");
+      });
+    });
+
+    if (wbBrushSize) {
+      wbBrushSize.addEventListener("input", (e) => {
+        currentLineWidth = parseInt(e.target.value) || 3;
+      });
+    }
+
+    if (wbEraserBtn) {
+      wbEraserBtn.addEventListener("click", () => {
+        isEraser = !isEraser;
+        if (isEraser) {
+          wbEraserBtn.classList.add("active");
+          showToast("Whiteboard Eraser selected.", "info");
+        } else {
+          wbEraserBtn.classList.remove("active");
+        }
+      });
+    }
+
+    if (wbClearBtn) {
+      wbClearBtn.addEventListener("click", () => {
+        ctx.clearRect(0, 0, wbCanvas.width, wbCanvas.height);
+        showToast("Whiteboard cleared.", "info");
+      });
+    }
+  }
+
+  // --- 7. In-Call Real-Time Chat ---
+  function sendChatMessage() {
+    if (!chatInput || !chatMessages) return;
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+
+    const now = new Date();
+    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    // Append self bubble
+    const selfBubble = document.createElement("div");
+    selfBubble.className = "chat-bubble chat-bubble-self";
+    selfBubble.innerHTML = `<strong>You (Rai Bose)</strong> <span style="font-size: 0.7rem; opacity: 0.7;">${timeStr}</span><br>${msg}`;
+    chatMessages.appendChild(selfBubble);
+    chatInput.value = "";
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Simulate peer reply
+    const currentPeerId = peerSelector ? peerSelector.value : "2";
+    const peer = peersData[currentPeerId] || peersData["2"];
+
+    setTimeout(() => {
+      const peerBubble = document.createElement("div");
+      peerBubble.className = "chat-bubble chat-bubble-peer";
+      peerBubble.innerHTML = `<strong>${peer.name}</strong> <span style="font-size: 0.7rem; opacity: 0.7;">${timeStr}</span><br>${peer.reply}`;
+      chatMessages.appendChild(peerBubble);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      if (chatBadge) {
+        const count = parseInt(chatBadge.textContent) || 0;
+        chatBadge.textContent = String(count + 1);
+      }
+    }, 1200);
+  }
+
+  if (sendChatBtn) sendChatBtn.addEventListener("click", sendChatMessage);
+  if (chatInput) {
+    chatInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendChatMessage();
+      }
+    });
+  }
+
+  // --- 8. Release Escrow Credit & Settle Session ---
+  if (releaseEscrowBtn) {
+    releaseEscrowBtn.addEventListener("click", () => {
+      const ratingModal = document.getElementById("ratingModal");
+      if (ratingModal) {
+        ratingModal.classList.add("open");
+      }
+    });
+  }
+}
+
 

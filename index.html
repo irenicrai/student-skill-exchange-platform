@@ -43,6 +43,7 @@
         <li><a href="#problem" class="nav-link">The Problem</a></li>
         <li><a href="#solver" class="nav-link">Cycle Solver</a></li>
         <li><a href="#marketplace" class="nav-link">Skill Directory</a></li>
+        <li><a href="#classroom" class="nav-link"><i class="fa-solid fa-video text-rose"></i> Live Classroom</a></li>
         <li><a href="#dashboard" class="nav-link">My Dashboard</a></li>
         <li><a href="#database" class="nav-link"><i class="fa-solid fa-database text-primary"></i> MySQL Explorer</a></li>
       </ul>
@@ -486,6 +487,304 @@
       <!-- Students Grid (Dynamic from DB/JS) -->
       <div class="students-grid" id="studentsGridContainer">
         <!-- Rendered by script.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: LIVE PEER TUTORING & VIDEO CLASSROOM -->
+  <section class="classroom-section" id="classroom">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="badge badge-primary"><i class="fa-solid fa-video"></i> WebRTC Enabled &bull; Collaborative Learning</span>
+        <h2 class="section-title">Live 1-on-1 Peer Tutoring Classroom</h2>
+        <p class="section-subtitle">
+          Connect face-to-face with your peer exchange partner, share code live, draw on the digital whiteboard, and release escrow credits upon completion.
+        </p>
+      </div>
+
+      <div class="classroom-window">
+        <!-- Window Titlebar -->
+        <div class="window-titlebar">
+          <div class="window-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+
+          <div class="session-badge-center">
+            <span class="badge badge-emerald"><i class="fa-solid fa-circle-dot fa-fade"></i> LIVE PEER SESSION</span>
+            <span style="font-weight: 600; color: var(--text-main);" id="classroomSessionTitle">Python &amp; DSA &harr; Calculus III Exchange</span>
+          </div>
+
+          <div class="session-timer-clock" title="Session Duration">
+            <i class="fa-regular fa-clock"></i>
+            <span id="callSessionClock">00:14:28</span>
+          </div>
+        </div>
+
+        <!-- Main Classroom Body Grid (Sidebar + Collaborative Workspace) -->
+        <div class="classroom-body-grid">
+          <!-- Sidebar: Video Feeds & Peer Switcher -->
+          <div class="peer-video-sidebar">
+            <!-- Peer Switcher -->
+            <div>
+              <label style="font-size: 0.76rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">
+                <i class="fa-solid fa-users"></i> Select Peer Connection:
+              </label>
+              <select id="classroomPeerSelector" class="form-control" style="font-size: 0.85rem; padding: 0.45rem 0.65rem;">
+                <option value="2" selected>Raj Biswas (Calculus III &bull; JIS BCA '26)</option>
+                <option value="3">Rahul Kumar Shaw (UI/UX Figma &bull; JIS BCA '26)</option>
+                <option value="4">Rahit Das (ML &amp; PyTorch &bull; JIS BCA '26)</option>
+                <option value="5">Protyusha Bose (MySQL Systems &bull; JIS BCA '26)</option>
+              </select>
+            </div>
+
+            <!-- Remote Peer Video Feed -->
+            <div class="video-frame-wrap" id="remoteVideoWrap">
+              <div class="video-status-tag">
+                <span class="live-dot pulse"></span>
+                <span id="remoteStatusText">Peer Connected</span>
+              </div>
+              <div class="video-audio-pulse" title="Peer Audio Activity">
+                <div class="audio-bar"></div>
+                <div class="audio-bar"></div>
+                <div class="audio-bar"></div>
+              </div>
+              <video id="remoteVideoElement" class="video-element" autoplay playsinline style="display:none;"></video>
+              <div id="remoteAvatarFallback" class="video-avatar-fallback">
+                <div id="remoteAvatarCircle" style="width: 54px; height: 54px; border-radius: 50%; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; box-shadow: 0 0 15px rgba(16,185,129,0.5);">
+                  RB
+                </div>
+                <div style="font-size: 0.82rem; font-weight: 600; color: #f1f5f9;" id="remotePeerNameDisplay">Raj Biswas</div>
+                <div style="font-size: 0.72rem; color: #94a3b8;" id="remotePeerSkillDisplay">Teaches: Multivariable Calculus III</div>
+              </div>
+              <div class="video-peer-name" id="remotePeerTag">Raj Biswas (JIS BCA '26)</div>
+            </div>
+
+            <!-- Local User Video Feed -->
+            <div class="video-frame-wrap" id="localVideoWrap">
+              <div class="video-status-tag">
+                <i class="fa-solid fa-video text-primary"></i>
+                <span id="localCamStatusText">You (Host)</span>
+              </div>
+              <div class="video-audio-pulse" id="localAudioPulse" title="Your Microphone">
+                <div class="audio-bar"></div>
+                <div class="audio-bar"></div>
+                <div class="audio-bar"></div>
+              </div>
+              <video id="localVideoElement" class="video-element" autoplay playsinline muted></video>
+              <div id="localAvatarFallback" class="video-avatar-fallback" style="display:none;">
+                <div style="width: 54px; height: 54px; border-radius: 50%; background: #4f46e5; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700;">
+                  RB
+                </div>
+                <div style="font-size: 0.82rem; font-weight: 600; color: #f1f5f9;">Rai Bose</div>
+                <div style="font-size: 0.72rem; color: #94a3b8;">Camera Off / Avatar Mode</div>
+              </div>
+              <div class="video-peer-name">Rai Bose (Project Lead)</div>
+            </div>
+
+            <!-- Session Topic & Contract Escrow Info -->
+            <div class="session-topic-box">
+              <div style="font-weight: 700; color: var(--text-main); margin-bottom: 0.35rem; display: flex; align-items: center; justify-content: space-between;">
+                <span id="classroomTopicSubject"><i class="fa-solid fa-book-open text-primary"></i> Current Lesson:</span>
+                <span class="badge badge-amber" style="font-size: 0.68rem;"><i class="fa-solid fa-lock"></i> Escrow: 1.0 CR</span>
+              </div>
+              <div style="font-size: 0.84rem; font-weight: 600; color: var(--primary);" id="classroomTopicTitle">
+                Multivariable Calculus: Gradient Vectors &amp; Directional Derivatives
+              </div>
+              <p style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.35rem; line-height: 1.4;" id="classroomTopicDesc">
+                Exchanging peer time: Rai teaches Python Data Structures (Binary Search) in return for Calculus III 3D gradient vector visual proofs.
+              </p>
+            </div>
+          </div>
+
+          <!-- Collaborative Workspace Area -->
+          <div class="classroom-collab-area">
+            <!-- Workspace Tabs -->
+            <div class="collab-toolbar">
+              <div class="collab-tab-btns">
+                <button class="collab-tab active" data-pane="code">
+                  <i class="fa-solid fa-code"></i> Live Code Sandbox
+                </button>
+                <button class="collab-tab" data-pane="whiteboard">
+                  <i class="fa-solid fa-chalkboard"></i> Interactive Whiteboard
+                </button>
+                <button class="collab-tab" data-pane="notes">
+                  <i class="fa-solid fa-file-lines"></i> Lesson Notes
+                </button>
+                <button class="collab-tab" data-pane="chat">
+                  <i class="fa-solid fa-comments"></i> Peer Chat <span class="badge badge-primary" id="chatBadgeCount" style="padding: 0.15rem 0.4rem; font-size: 0.68rem;">3</span>
+                </button>
+              </div>
+
+              <!-- Quick Action Toolbar Indicator -->
+              <div style="font-size: 0.76rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem;">
+                <i class="fa-solid fa-cloud-arrow-up text-emerald"></i>
+                <span id="collabSyncStatus">Real-time sync active</span>
+              </div>
+            </div>
+
+            <!-- Tab 1: Code Sandbox Pane -->
+            <div id="paneCode" class="code-sandbox-pane" style="display: flex;">
+              <div class="code-editor-header">
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                  <span><i class="fa-brands fa-python text-amber"></i> active_session_code</span>
+                  <select id="codeLanguageSelect" style="background: #090d16; color: #cbd5e1; border: 1px solid #334155; border-radius: 4px; padding: 0.2rem 0.5rem; font-size: 0.75rem;">
+                    <option value="python">Python 3 (Binary Search &amp; DSA)</option>
+                    <option value="javascript">JavaScript (ES6)</option>
+                    <option value="sql">MySQL (ACID Transactions &amp; Joins)</option>
+                  </select>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button class="btn btn-emerald btn-sm" id="runClassroomCodeBtn" style="padding: 0.25rem 0.75rem; font-size: 0.78rem;">
+                    <i class="fa-solid fa-play"></i> Run Code
+                  </button>
+                  <button class="btn btn-secondary btn-sm" id="clearCodeOutputBtn" style="padding: 0.25rem 0.75rem; font-size: 0.78rem; background: #334155; color: white; border: none;">
+                    <i class="fa-solid fa-rotate-left"></i> Clear Output
+                  </button>
+                </div>
+              </div>
+              <textarea id="classroomCodeEditor" class="code-editor-textarea" spellcheck="false"># =========================================================
+# JIS College of Engineering - BCA Peer Tutoring Session
+# Topic: Binary Search Algorithm &amp; Time Complexity O(log n)
+# Tutor: Rai Bose &bull; Peer: Raj Biswas
+# =========================================================
+
+def binary_search(arr, target):
+    """
+    Finds index of target in sorted array arr.
+    Time Complexity: O(log N) | Space Complexity: O(1)
+    """
+    low = 0
+    high = len(arr) - 1
+    steps = 0
+    
+    while low <= high:
+        steps += 1
+        mid = (low + high) // 2
+        print(f"Step {steps}: checking index {mid} -> value {arr[mid]}")
+        
+        if arr[mid] == target:
+            return mid, steps
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+            
+    return -1, steps
+
+# Test Dataset
+student_ids = [101, 104, 108, 115, 122, 137, 142, 150, 168, 180]
+search_target = 137
+
+print(f"Searching for Student ID {search_target} in {len(student_ids)} records...")
+idx, count = binary_search(student_ids, search_target)
+print(f"Result: Found at index {idx} in {count} iterations (O(log n) efficiency)!")
+</textarea>
+              <div class="code-output-terminal" id="classroomCodeOutput">
+                <span style="color: #64748b;">// Output terminal ready. Click "Run Code" to execute with peer...</span>
+              </div>
+            </div>
+
+            <!-- Tab 2: Whiteboard Pane -->
+            <div id="paneWhiteboard" class="whiteboard-pane" style="display: none;">
+              <div class="whiteboard-toolbar">
+                <div class="whiteboard-tool-group">
+                  <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-right: 0.25rem;">Ink Color:</span>
+                  <button class="wb-color-btn active" data-color="#4f46e5" style="background: #4f46e5;" title="Indigo"></button>
+                  <button class="wb-color-btn" data-color="#10b981" style="background: #10b981;" title="Emerald"></button>
+                  <button class="wb-color-btn" data-color="#f59e0b" style="background: #f59e0b;" title="Amber"></button>
+                  <button class="wb-color-btn" data-color="#ef4444" style="background: #ef4444;" title="Red"></button>
+                  <button class="wb-color-btn" data-color="#0f172a" style="background: #0f172a;" title="Black"></button>
+                </div>
+
+                <div class="whiteboard-tool-group">
+                  <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">Brush:</span>
+                  <input type="range" id="wbBrushSize" min="2" max="18" value="3" style="width: 80px;">
+                </div>
+
+                <div class="whiteboard-tool-group">
+                  <button class="btn btn-secondary btn-sm" id="wbEraserBtn" style="padding: 0.25rem 0.65rem; font-size: 0.78rem;">
+                    <i class="fa-solid fa-eraser"></i> Eraser
+                  </button>
+                  <button class="btn btn-secondary btn-sm" id="wbClearBtn" style="padding: 0.25rem 0.65rem; font-size: 0.78rem; color: #ef4444;">
+                    <i class="fa-solid fa-trash-can"></i> Clear
+                  </button>
+                </div>
+              </div>
+              <canvas id="whiteboardCanvas" class="whiteboard-canvas-el" width="800" height="420"></canvas>
+            </div>
+
+            <!-- Tab 3: Lesson Notes Pane -->
+            <div id="paneNotes" class="notes-editor-pane" style="display: none;">
+              <textarea id="classroomSharedNotes" class="notes-textarea" placeholder="Type shared lesson notes here... Both tutor and student can view and edit notes in real time."># JIS Peer Tutoring Session Notes
+Session Date: November 2026
+Tutor: Rai Bose (BCA '26) | Student: Raj Biswas (BCA '26)
+
+Key Concepts Covered:
+1. Divide and Conquer strategy for Binary Search.
+2. Logarithmic time complexity: 1,000 items resolved in ~10 comparisons.
+3. Next Topic: 3D Gradient Vector calculations in Multivariable Calculus.
+
+Peer Exchange Agreement:
+- 1 hour of DSA tutored by Rai = 1 hour of Calculus III tutored by Raj.
+- 1.00 Time-Bank Credit escrow verified upon call termination.
+</textarea>
+            </div>
+
+            <!-- Tab 4: In-Call Chat Pane -->
+            <div id="paneChat" class="call-chat-pane" style="display: none;">
+              <div class="call-chat-messages" id="classroomChatMessages">
+                <div class="chat-bubble chat-bubble-peer">
+                  <strong>Raj Biswas</strong> <span style="font-size: 0.7rem; opacity: 0.7;">14:18</span><br>
+                  Hey Rai! Audio and video are crystal clear. Excited to get started on the binary search problem!
+                </div>
+                <div class="chat-bubble chat-bubble-self">
+                  <strong>You (Rai Bose)</strong> <span style="font-size: 0.7rem; opacity: 0.7;">14:19</span><br>
+                  Welcome Raj! I've loaded our Python binary search test script in the code sandbox. Let's run it together.
+                </div>
+                <div class="chat-bubble chat-bubble-peer">
+                  <strong>Raj Biswas</strong> <span style="font-size: 0.7rem; opacity: 0.7;">14:20</span><br>
+                  Awesome, looking at the code right now!
+                </div>
+              </div>
+              <div class="call-chat-input-bar">
+                <input type="text" id="classroomChatInput" class="form-control" placeholder="Send a message to your peer..." style="flex-grow: 1;">
+                <button class="btn btn-primary" id="sendClassroomChatBtn">
+                  <i class="fa-solid fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Controls Bar -->
+        <div class="classroom-bottom-bar">
+          <div class="call-controls-cluster">
+            <button class="call-btn call-btn-default" id="toggleCallMicBtn" title="Mute/Unmute Microphone">
+              <i class="fa-solid fa-microphone"></i>
+            </button>
+            <button class="call-btn call-btn-default" id="toggleCallCamBtn" title="Turn Camera On/Off">
+              <i class="fa-solid fa-video"></i>
+            </button>
+            <button class="call-btn call-btn-default" id="toggleCallScreenBtn" title="Share Screen">
+              <i class="fa-solid fa-display"></i>
+            </button>
+            <button class="call-btn call-btn-default" id="toggleWhiteboardQuickBtn" title="Switch to Whiteboard">
+              <i class="fa-solid fa-pen-nib"></i>
+            </button>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap;">
+            <div style="font-size: 0.82rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.35rem;">
+              <i class="fa-solid fa-shield-halved text-emerald"></i>
+              <span>Time-Bank Escrow Active (1.00 CR)</span>
+            </div>
+            <button class="btn btn-primary" id="classroomReleaseEscrowBtn">
+              <i class="fa-solid fa-circle-check"></i> Complete Lesson &amp; Release 1.0 CR
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
